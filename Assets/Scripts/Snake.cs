@@ -2,16 +2,20 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Directions {
-    Left, Right, Up, Down
-}
-public class SnakeMovement : MonoBehaviour
+public class Snake : MonoBehaviour
 {
-    [SerializeField] private float speed;
-    [SerializeField] private GameObject bodyPart;
-    [SerializeField] private LayerMask obstacle;
-    [SerializeField] private Transform point;
-    [SerializeField] private int initialSize;
+    [Header("Snake Information")]
+    [SerializeField] private SnakeVariables snakeVariables;
+    [SerializeField] private SnakePowerUp snakePowerUp;
+    
+    [Space(10)][Header("Player Information")]
+    [SerializeField] private bool isPlayer;
+    
+    [Space(10)][Header("Essentials")]
+    [SerializeField] private GameObject bodyPartPrefab;
+    [SerializeField] private LayerMask obstacleLayer;
+    [SerializeField] private Transform predictionPoint;
+    [SerializeField] private int initialSnakeSize;
     
     private Controls _controls;
     private Controls Controls
@@ -29,19 +33,17 @@ public class SnakeMovement : MonoBehaviour
 
     private bool _canMove = true;
     private readonly List<Transform> _bodyParts = new List<Transform>();
-    private float _actualSpeed;
 
     void Start()
     {
         ResetSnake();
-        Controls.Enable();
-        Invoke(nameof(Move), 0);
+        if (isPlayer) Controls.Enable();
+        Invoke(nameof(Move), 0); // TODO: change to coroutines
     }
 
     private void ResetSnake()
     {
         transform.rotation = Quaternion.identity;
-        _actualSpeed = speed * 0.1f;
         SetUpControls();
         _bodyParts.Clear();
         _bodyParts.Add(transform);
@@ -50,7 +52,7 @@ public class SnakeMovement : MonoBehaviour
 
     private void SetUpInitialSize()
     {
-        for (var i = 0; i < initialSize; i++)
+        for (var i = 0; i < initialSnakeSize; i++)
         {
             IncreaseSize();
         }
@@ -66,10 +68,17 @@ public class SnakeMovement : MonoBehaviour
 
     void Move()
     {
-        if (point.GetComponent<BoxCollider2D>().IsTouchingLayers(obstacle))
+        if (predictionPoint.GetComponent<BoxCollider2D>().IsTouchingLayers(obstacleLayer))
         {
-            GameOver();
-            return;
+            bool success = snakePowerUp.TryUseBatteringRam();
+            if (success)
+            {
+                DecreaseSize();
+            } else
+            {
+                GameOver();
+                return;
+            }
         }
 
         for (int i = _bodyParts.Count - 1; i > 0; i--)
@@ -81,13 +90,13 @@ public class SnakeMovement : MonoBehaviour
         Transform t = transform;
         t.position += t.right;
         
-        Invoke(nameof(Move), _actualSpeed);
+        Invoke(nameof(Move), snakeVariables.Speed);
         _canMove = true;
     }
 
     private void GameOver()
     {
-        Controls.Disable();
+        if (isPlayer) Controls.Disable();
     }
     
     private void Turn(Directions dir)
@@ -125,24 +134,25 @@ public class SnakeMovement : MonoBehaviour
         if (other.CompareTag("Block"))
         {
             Block block = other.GetComponent<Block>();
-
+            if (block.Type == PowerUp.EnergyEngine) snakeVariables.OnPickupEnergyEngineBlock();
             IncreaseSize();
-            AddPowerUp(block.Type);
-            block.RespawnBlock();
         }
     }
 
-    private void AddPowerUp(BlockType type)
-    {
-        // todo: create separate script for power-ups
-    }
-    
     private void IncreaseSize()
     {
+        snakeVariables.OnPickupAnyBlock();
         Transform reference = _bodyParts[_bodyParts.Count - 1];
         
-        GameObject block = Instantiate(bodyPart, reference.position - reference.right, reference.rotation);
+        GameObject block = Instantiate(bodyPartPrefab, reference.position - reference.right, reference.rotation);
         _bodyParts.Add(block.transform);
         block.transform.parent = transform.parent;
+    }
+
+    private void DecreaseSize()
+    {
+        snakeVariables.OnUseBatteringRam();
+        Destroy(_bodyParts[_bodyParts.Count - 1].gameObject);
+        _bodyParts.RemoveAt(_bodyParts.Count - 1);
     }
 }

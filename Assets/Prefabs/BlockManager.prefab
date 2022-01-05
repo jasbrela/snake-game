@@ -186,9 +186,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e582574f51de5c47b2a156cdc567960, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boundsCollider: {fileID: 3815925144025931034}
-  batteringRam: {fileID: 8984188869575658019}
-  energyEngine: {fileID: 7298201392319822314}
 --- !u!61 &9021857168850368095
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -224,8 +221,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1641310469093247403}
+  - component: {fileID: 7810361578551952701}
   m_Layer: 0
-  m_Name: Block
+  m_Name: BlockManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -247,6 +245,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7810361578551952701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8014452885541326664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4fed1c48a579e542a07e85cc8a3e2e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  block: {fileID: 3424925899677023816}
+  boundsCollider: {fileID: 3815925144025931034}
+  batteringRam: {fileID: 8984188869575658019}
+  energyEngine: {fileID: 7298201392319822314}
 --- !u!1 &8984188869575658019
 GameObject:
   m_ObjectHideFlags: 0
