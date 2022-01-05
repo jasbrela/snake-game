@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -3005256214743431521}
   - component: {fileID: -108796723519238925}
   m_Layer: 6
-  m_Name: Body Part
+  m_Name: AI Body Part
   m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -101,7 +101,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 32e8ae674dbff2945ac79d7212844d6b, type: 3}
-  m_Color: {r: 0.5921569, g: 0.9647059, b: 0.05490196, a: 1}
+  m_Color: {r: 0.4117647, g: 0.32941177, b: 0.6901961, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

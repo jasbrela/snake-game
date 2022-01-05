@@ -186,6 +186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e582574f51de5c47b2a156cdc567960, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _blockManager: {fileID: 7810361578551952701}
 --- !u!61 &9021857168850368095
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -257,7 +258,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4fed1c48a579e542a07e85cc8a3e2e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  block: {fileID: 3424925899677023816}
   boundsCollider: {fileID: 3815925144025931034}
   batteringRam: {fileID: 8984188869575658019}
   energyEngine: {fileID: 7298201392319822314}

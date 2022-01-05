@@ -1,5 +1,8 @@
-public enum PowerUp
+namespace Enums
 {
-    EnergyEngine,
-    BatteringRam
+    public enum PowerUp
+    {
+        EnergyEngine,
+        BatteringRam
+    }
 }
