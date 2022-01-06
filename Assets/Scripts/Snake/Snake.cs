@@ -13,21 +13,25 @@ namespace Snake
         [Header("Snake Information")]
         [SerializeField] private SnakeVariables snakeVariables;
         [SerializeField] private SnakePowerUp snakePowerUp;
+        [SerializeField] private int initialSnakeSize;
     
         [Space(10)][Header("Player Information")]
         [Tooltip("Mark if it's not AI")][SerializeField] protected bool isPlayer;
         
-        [Space(10)][Header("AI Information")]
+        [Space(10)][Header("AI Information - No need to fill in if it's not AI.")]
         [SerializeField] private BoxCollider2D pointLeft;
         [SerializeField] private BoxCollider2D pointRight;
+        [SerializeField] private BoxCollider2D pointFrontLeft;
+        [SerializeField] private BoxCollider2D pointFrontRight;
+        [SerializeField] private BoxCollider2D pointBackLeft;
+        [SerializeField] private BoxCollider2D pointBackRight;
 
         [Space(10)][Header("Essentials")]
-        [SerializeField] private BlockManager blockManager;
+        [SerializeField] private BoxCollider2D pointFront;
         [SerializeField] private GameObject bodyPartPrefab;
         [SerializeField] private LayerMask obstacleLayer;
         [SerializeField] private LayerMask wallsLayer;
-        [SerializeField] private BoxCollider2D predictionPoint;
-        [SerializeField] private int initialSnakeSize;
+        [SerializeField] private BlockManager blockManager;
     
         private Controls _controls;
         private Controls Controls
@@ -60,18 +64,18 @@ namespace Snake
         {
             ResetSnake();
             if (isPlayer) SetUpControls(); Controls.Enable();
-            _direction = blockManager.GetLastGeneratedBlockPosition();
+            ChangeDirection(blockManager.GetLastGeneratedBlockPosition());
             StartCoroutine(Move());
         }
 
         private void ResetSnake()
         {
-            // TODO: Randomize position?
-            // TODO: Create certain spawn points?
-            
             ResetBodyParts();
+            snakeVariables.OnResetSnake();
             SetRandomRotation();
+            transform.position = blockManager.GetRandomPosition(false);
             SetUpInitialSize();
+            ChangeDirection(blockManager.GetLastGeneratedBlockPosition());
         }
 
         private void SetRandomRotation()
@@ -183,8 +187,8 @@ namespace Snake
 
         private bool HasCollided()
         {
-            bool isTouchingObstacle = predictionPoint.IsTouchingLayers(obstacleLayer);
-            bool isTouchingWalls = predictionPoint.IsTouchingLayers(wallsLayer);
+            bool isTouchingObstacle = pointFront.IsTouchingLayers(obstacleLayer);
+            bool isTouchingWalls = pointFront.IsTouchingLayers(wallsLayer);
 
             if (!isTouchingObstacle && !isTouchingWalls) return false;
             
@@ -211,9 +215,14 @@ namespace Snake
 
         private void GameOver()
         {
-            ResetSnake();
-            if (!isPlayer) return;
-            Controls.Disable();
+            if (isPlayer)
+            {
+                Controls.Disable();
+            }
+            else
+            {
+                ResetSnake();
+            }
         }
         
         private void OnTriggerEnter2D(Collider2D other)
@@ -246,6 +255,8 @@ namespace Snake
         #region AI Part
         private void MoveAI()
         {
+            if (pointFront.IsTouchingLayers(obstacleLayer)) TurnToDesiredDirection(_currentDir + 2);
+            
             var pos = transform.position;
             var relDir = pos - _direction;
             
@@ -269,7 +280,6 @@ namespace Snake
             if (_currentDir == desired) return;
             if (!_canMove) return;
 
-            // TODO: Add checkup to avoid keep going ahead
             bool avoidObstacleLeft = pointLeft.IsTouchingLayers(obstacleLayer);
             bool avoidObstacleRight = pointRight.IsTouchingLayers(obstacleLayer);
 
@@ -294,8 +304,10 @@ namespace Snake
                             break;
                         
                         case false when avoidObstacleRight:
-                        case false:
                             Turn(GetLeftDirection());
+                            break;
+                        case false:
+                            Turn(GetCorrectDirection());
                             break;
                     }
                     break;
@@ -307,6 +319,19 @@ namespace Snake
             }
         }
 
+        private Directions GetCorrectDirection()
+        {
+            int leftSum = 0;
+            int rightSum = 0;
+            
+            if (pointFrontLeft.IsTouchingLayers(obstacleLayer)) leftSum++;
+            if (pointFrontRight.IsTouchingLayers(obstacleLayer)) leftSum++;
+            if (pointBackLeft.IsTouchingLayers(obstacleLayer)) rightSum++;
+            if (pointBackRight.IsTouchingLayers(obstacleLayer)) rightSum++;
+
+            return leftSum > rightSum ? GetLeftDirection() : GetRightDirection();
+        }
+        
         private Directions GetRightDirection()
         {
             return _currentDir == Directions.Down ? Directions.Left : _currentDir + 1;

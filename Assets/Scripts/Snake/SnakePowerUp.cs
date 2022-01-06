@@ -37,7 +37,7 @@ namespace Snake
 
         private void OnChangeBatteringRamQuantity()
         {
-            text.text = $"x{_batteringRamQuantity}";
+            if (text != null) text.text = $"x{_batteringRamQuantity}";
         }
 
     }

@@ -245,6 +245,10 @@ PrefabInstance:
       propertyPath: blockManager
       value: 
       objectReference: {fileID: 332191392}
+    - target: {fileID: 3261267276306348664, guid: c8b691b2ba9f2e944a1e42693778105b, type: 3}
+      propertyPath: wallsLayer.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
     - target: {fileID: 6495076846855267201, guid: c8b691b2ba9f2e944a1e42693778105b, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -295,7 +299,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7535217261492618183, guid: c8b691b2ba9f2e944a1e42693778105b, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c8b691b2ba9f2e944a1e42693778105b, type: 3}
@@ -418,7 +422,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 14
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

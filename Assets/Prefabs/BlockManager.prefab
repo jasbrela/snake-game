@@ -186,7 +186,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e582574f51de5c47b2a156cdc567960, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _blockManager: {fileID: 7810361578551952701}
+  blockManager: {fileID: 7810361578551952701}
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!61 &9021857168850368095
 BoxCollider2D:
   m_ObjectHideFlags: 0
