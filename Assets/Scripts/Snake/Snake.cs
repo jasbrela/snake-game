@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Blocks;
 using Enums;
 using UnityEngine;
@@ -10,21 +11,24 @@ namespace Snake
     {
         #region Variables
         [Header("Snake Information")]
-        
         [SerializeField] private SnakeVariables snakeVariables;
         [SerializeField] private SnakePowerUp snakePowerUp;
     
         [Space(10)][Header("Player Information")]
-        [SerializeField] protected bool isPlayer;
-    
+        [Tooltip("Mark if it's not AI")][SerializeField] protected bool isPlayer;
+        
+        [Space(10)][Header("AI Information")]
+        [SerializeField] private BoxCollider2D pointLeft;
+        [SerializeField] private BoxCollider2D pointRight;
+
         [Space(10)][Header("Essentials")]
         [SerializeField] private BlockManager blockManager;
         [SerializeField] private GameObject bodyPartPrefab;
         [SerializeField] private LayerMask obstacleLayer;
-        [SerializeField] private Transform predictionPoint;
+        [SerializeField] private LayerMask wallsLayer;
+        [SerializeField] private BoxCollider2D predictionPoint;
         [SerializeField] private int initialSnakeSize;
     
-        private Vector3 _direction;
         private Controls _controls;
         private Controls Controls
         {
@@ -38,10 +42,10 @@ namespace Snake
                 return _controls = new Controls();
             }
         }
-
+        private readonly List<Transform> _bodyParts = new List<Transform>();
+        private Vector3 _direction;
         private Directions _currentDir = Directions.Right;
         private bool _canMove = true;
-        private readonly List<Transform> _bodyParts = new List<Transform>();
         
         #endregion
         
@@ -55,18 +59,51 @@ namespace Snake
         private void Start()
         {
             ResetSnake();
-            if (isPlayer) Controls.Enable();
+            if (isPlayer) SetUpControls(); Controls.Enable();
             _direction = blockManager.GetLastGeneratedBlockPosition();
             StartCoroutine(Move());
         }
 
         private void ResetSnake()
         {
-            transform.rotation = Quaternion.identity;
-            SetUpControls();
+            // TODO: Randomize position?
+            // TODO: Create certain spawn points?
+            
+            ResetBodyParts();
+            SetRandomRotation();
+            SetUpInitialSize();
+        }
+
+        private void SetRandomRotation()
+        {
+            float chance = Random.Range(0, 1f);
+            
+            if (chance > 0.75f)
+            {
+                Turn(Directions.Left);
+            }
+            else if (chance > 0.5f)
+            {
+                Turn(Directions.Right);
+            }
+            else if (chance > 0.25f)
+            {
+                Turn(Directions.Up);
+            }
+            else
+            {
+                Turn(Directions.Down);
+            }
+        }
+
+        private void ResetBodyParts()
+        {
+            foreach (var part in _bodyParts.Where(part => part != transform))
+            {
+                Destroy(part.gameObject);
+            }
             _bodyParts.Clear();
             _bodyParts.Add(transform);
-            SetUpInitialSize();
         }
 
         private void SetUpInitialSize()
@@ -110,28 +147,12 @@ namespace Snake
             t.position += t.right;
         }
 
-        private void MoveAI()
-        {
-            var pos = transform.position;
-            var relDir = pos - _direction;
-            
-            if (Mathf.Abs(relDir.x) > Mathf.Abs(relDir.y))
-            {
-                TurnToDesiredDirection(_direction.x > pos.x ? Directions.Right : Directions.Left);
-            }
-            else
-            {
-                TurnToDesiredDirection(_direction.y > pos.y ? Directions.Up : Directions.Down);
-            }
-        }
-        
         private void Turn(Directions dir)
         {
             if (!_canMove) return;
         
             _canMove = false;
  
-            Debug.Log("Turn to " + dir);
             var z = transform.rotation.z;
             switch (dir)
             {
@@ -162,21 +183,30 @@ namespace Snake
 
         private bool HasCollided()
         {
-            if (!predictionPoint.GetComponent<BoxCollider2D>().IsTouchingLayers(obstacleLayer)) return false;
+            bool isTouchingObstacle = predictionPoint.IsTouchingLayers(obstacleLayer);
+            bool isTouchingWalls = predictionPoint.IsTouchingLayers(wallsLayer);
+
+            if (!isTouchingObstacle && !isTouchingWalls) return false;
             
-            bool success = snakePowerUp.TryUseBatteringRam();
-            
-            if (success)
+            if (isTouchingObstacle)
             {
-                DecreaseSize();
-            }
-            else
-            {
-                GameOver();
-                return true;
+                bool success = snakePowerUp.TryUseBatteringRam();
+
+                if (success)
+                {
+                    DecreaseSize();
+                    return false;
+                }
             }
 
-            return false;
+            if (!isPlayer)
+            {
+                RespawnAI();
+                return false;
+            }
+            
+            GameOver();
+            return true;
         }
 
         private void GameOver()
@@ -214,25 +244,64 @@ namespace Snake
         }
 
         #region AI Part
+        private void MoveAI()
+        {
+            var pos = transform.position;
+            var relDir = pos - _direction;
+            
+            if (Mathf.Abs(relDir.x) > Mathf.Abs(relDir.y))
+            {
+                TurnToDesiredDirection(_direction.x > pos.x ? Directions.Right : Directions.Left);
+            }
+            else
+            {
+                TurnToDesiredDirection(_direction.y > pos.y ? Directions.Up : Directions.Down);
+            }
+        }
+
+        private void RespawnAI()
+        {
+            ResetSnake();
+        }
+        
         private void TurnToDesiredDirection(Directions desired)
         {
             if (_currentDir == desired) return;
             if (!_canMove) return;
-            
+
+            // TODO: Add checkup to avoid keep going ahead
+            bool avoidObstacleLeft = pointLeft.IsTouchingLayers(obstacleLayer);
+            bool avoidObstacleRight = pointRight.IsTouchingLayers(obstacleLayer);
+
             var value = _currentDir - desired;
 
             switch (value)
             {
                 case 1:
                 case -3:
+                    if (avoidObstacleLeft) return;
                     Turn(GetLeftDirection());
                     break;
-                case -2:        // this case is whether right or left.
-                case 2:         // TODO: so, add more checkups before deciding turn
-                    Turn(GetLeftDirection());
+                case -2:
+                case 2:
+                    switch (avoidObstacleLeft)
+                    {
+                        case true when avoidObstacleRight:
+                            return;
+                        
+                        case true:
+                            Turn(GetRightDirection());
+                            break;
+                        
+                        case false when avoidObstacleRight:
+                        case false:
+                            Turn(GetLeftDirection());
+                            break;
+                    }
                     break;
                 case -1:
                 case 3:
+                    if (avoidObstacleRight) return;
                     Turn(GetRightDirection());
                     break;
             }
@@ -240,12 +309,11 @@ namespace Snake
 
         private Directions GetRightDirection()
         {
-            return _currentDir == Directions.Down ? Directions.Left : _currentDir + 1;;
+            return _currentDir == Directions.Down ? Directions.Left : _currentDir + 1;
         }
         
         private Directions GetLeftDirection()
         {
-            
             return _currentDir == Directions.Left ? Directions.Down : _currentDir - 1;
         }
         

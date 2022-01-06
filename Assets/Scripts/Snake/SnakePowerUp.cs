@@ -1,11 +1,13 @@
 using Blocks;
 using Enums;
+using TMPro;
 using UnityEngine;
 
 namespace Snake
 {
     public class SnakePowerUp : MonoBehaviour
     {
+        [SerializeField] private TextMeshProUGUI text;
         private int _energyEngineQuantity;
         private int _batteringRamQuantity;
         private void OnTriggerEnter2D(Collider2D other)
@@ -21,7 +23,7 @@ namespace Snake
     
         private void AddPowerUp(PowerUp type)
         {
-            if (type == PowerUp.BatteringRam) _batteringRamQuantity++;
+            if (type == PowerUp.BatteringRam) { _batteringRamQuantity++; OnChangeBatteringRamQuantity();}
             if (type == PowerUp.EnergyEngine) _energyEngineQuantity++;
         }
 
@@ -29,7 +31,13 @@ namespace Snake
         {
             if (_batteringRamQuantity <= 0) return false;
             _batteringRamQuantity--;
+            OnChangeBatteringRamQuantity();
             return true;
+        }
+
+        private void OnChangeBatteringRamQuantity()
+        {
+            text.text = $"x{_batteringRamQuantity}";
         }
 
     }
