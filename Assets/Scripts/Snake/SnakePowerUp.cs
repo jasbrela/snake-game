@@ -8,8 +8,10 @@ namespace Snake
     public class SnakePowerUp : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI text;
+        
         private int _energyEngineQuantity;
         private int _batteringRamQuantity;
+        
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.CompareTag("Block"))

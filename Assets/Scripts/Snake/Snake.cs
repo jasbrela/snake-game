@@ -63,7 +63,14 @@ namespace Snake
         private void Start()
         {
             ResetSnake();
-            if (isPlayer) SetUpControls(); Controls.Enable();
+            
+            if (isPlayer) 
+            {
+                GameManager.Instance.ResetGame();
+                SetUpControls();
+                Controls.Enable();
+            }
+            
             ChangeDirection(blockManager.GetLastGeneratedBlockPosition());
             StartCoroutine(Move());
         }
@@ -130,6 +137,7 @@ namespace Snake
         {
             while (true)
             {
+                if (GameManager.Instance.IsGameOver()) yield break;
                 if (HasCollided()) yield break;
                 if (!isPlayer) MoveAI();
                 MoveSnake();
@@ -217,6 +225,7 @@ namespace Snake
         {
             if (isPlayer)
             {
+                GameManager.Instance.EndGame();
                 Controls.Disable();
             }
             else
