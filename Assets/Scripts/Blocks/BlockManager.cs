@@ -26,7 +26,7 @@ namespace Blocks
             }
 
             energyEngine.SetActive(true);
-            return PowerUp.EnergyEngine;
+            return PowerUp.EnginePower;
         }
 
         public void ResetBlock()
@@ -48,8 +48,12 @@ namespace Blocks
                 Mathf.Round(Random.Range(-bounds.y, bounds.y))) + boundsCollider.offset;
 
             var pos = boundsCollider.transform.TransformPoint(point);
-            if (isBlockPosition) _lastPosGenerated = pos;
+            
+            if (!isBlockPosition) return pos;
+            
+            _lastPosGenerated = pos;
             _onGeneratedRandomPosMethod?.Invoke(pos);
+
             return pos;
         }
 

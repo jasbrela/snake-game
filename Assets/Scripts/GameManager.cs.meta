@@ -3,8 +3,9 @@ guid: 6a7dc919b5f091b4582c12ad8e8624dd
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
-  executionOrder: 0
+  defaultReferences:
+  - gameOverPanel: {fileID: 4923940718404115537, guid: 600a70823f70d0d4fb6aec257e1b9c2e, type: 3}
+  executionOrder: -50
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 

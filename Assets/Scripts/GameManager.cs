@@ -19,6 +19,12 @@ public class GameManager : MonoBehaviour
     }
     #endregion
     
+    public delegate void OnPressRetry();
+    private OnPressRetry _onPressRetry;
+    
+    public delegate void OnGameOverStatusChanged();
+    private OnGameOverStatusChanged _onGameOverStatusChanged;
+    
     private bool _gameOver;
 
     private void Awake()
@@ -33,20 +39,35 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void SendOnPressRetryCallback(OnPressRetry callback)
+    {
+        _onPressRetry += callback;
+    }
+    
+    public void SendOnGameOverStatusChangedCallback(OnGameOverStatusChanged callback)
+    {
+        _onGameOverStatusChanged += callback;
+    }
+
     public void EndGame()
     {
-        // TODO: hide snakes
-        _gameOver = true;
+        ChangeGameOverStatus(true);
     }
 
     public void ResetGame()
     {
-        // TODO: reset and show snakes
-        _gameOver = false;
+        ChangeGameOverStatus(false);
+        _onPressRetry?.Invoke();
     }
     
     public bool IsGameOver()
     {
         return _gameOver;
+    }
+
+    private void ChangeGameOverStatus(bool isOver)
+    {
+        _gameOver = isOver;
+        _onGameOverStatusChanged();
     }
 }

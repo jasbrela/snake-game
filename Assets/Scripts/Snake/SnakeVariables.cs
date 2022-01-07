@@ -6,21 +6,21 @@ namespace Snake
     {
         [Tooltip("The smaller the value the faster")][SerializeField] private float speed;
         [SerializeField] private float weightPerBlock;
-        [SerializeField] private float energySpeedBonus;
+        [SerializeField] private float powerEngineBonus;
         private float _defaultSpeed;
     
         public float Speed => speed * 0.1f;
         private float WeightPerBlock => weightPerBlock * 0.1f;
-        private float EnergySpeedBonus => energySpeedBonus * 0.1f;
+        private float PowerEngineBonus => powerEngineBonus * 0.1f;
 
         private void Awake()
         {
             _defaultSpeed = speed;
         }
 
-        public void OnPickupEnergyEngineBlock()
+        public void OnPickupEnginePowerBlock()
         {
-            speed -= EnergySpeedBonus;
+            speed -= PowerEngineBonus;
         }
 
         public void OnPickupAnyBlock()

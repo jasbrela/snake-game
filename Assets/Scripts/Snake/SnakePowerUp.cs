@@ -9,7 +9,7 @@ namespace Snake
     {
         [SerializeField] private TextMeshProUGUI text;
         
-        private int _energyEngineQuantity;
+        private int _enginePowerQuantity;
         private int _batteringRamQuantity;
         
         private void OnTriggerEnter2D(Collider2D other)
@@ -25,8 +25,15 @@ namespace Snake
     
         private void AddPowerUp(PowerUp type)
         {
-            if (type == PowerUp.BatteringRam) { _batteringRamQuantity++; OnChangeBatteringRamQuantity();}
-            if (type == PowerUp.EnergyEngine) _energyEngineQuantity++;
+            switch (type)
+            {
+                case PowerUp.BatteringRam:
+                    _batteringRamQuantity++; OnChangeBatteringRamQuantity();
+                    break;
+                case PowerUp.EnginePower:
+                    _enginePowerQuantity++;
+                    break;
+            }
         }
 
         public bool TryUseBatteringRam()

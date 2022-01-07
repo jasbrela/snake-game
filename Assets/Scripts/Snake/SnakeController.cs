@@ -1,16 +1,20 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Blocks;
 using Enums;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Snake
 {
-    public class Snake : MonoBehaviour
+    public class SnakeController : MonoBehaviour
     {
         #region Variables
+
         [Header("Snake Information")]
+        [SerializeField] private Color color;
         [SerializeField] private SnakeVariables snakeVariables;
         [SerializeField] private SnakePowerUp snakePowerUp;
         [SerializeField] private int initialSnakeSize;
@@ -33,6 +37,7 @@ namespace Snake
         [SerializeField] private LayerMask wallsLayer;
         [SerializeField] private BlockManager blockManager;
     
+        // PLAYER
         private Controls _controls;
         private Controls Controls
         {
@@ -46,15 +51,21 @@ namespace Snake
                 return _controls = new Controls();
             }
         }
-        private readonly List<Transform> _bodyParts = new List<Transform>();
+
+        // AI
         private Vector3 _direction;
+        
+        // BOTH
+        private readonly List<Transform> _bodyParts = new List<Transform>();
         private Directions _currentDir = Directions.Right;
         private bool _canMove = true;
-        
         #endregion
         
         private void Awake()
         {
+            GameManager.Instance.SendOnPressRetryCallback(ResetSnake);
+            GetComponent<SpriteRenderer>().color = color;
+            
             if (isPlayer) return;
             enabled = true;
             blockManager.SendOnGeneratedRandomPositionCallback(ChangeDirection);
@@ -62,16 +73,14 @@ namespace Snake
 
         private void Start()
         {
-            ResetSnake();
-            
             if (isPlayer) 
             {
-                GameManager.Instance.ResetGame();
                 SetUpControls();
-                Controls.Enable();
+                GameManager.Instance.ResetGame();
             }
             
-            ChangeDirection(blockManager.GetLastGeneratedBlockPosition());
+            if (!isPlayer) ChangeDirection(blockManager.GetLastGeneratedBlockPosition());
+            
             StartCoroutine(Move());
         }
 
@@ -80,9 +89,11 @@ namespace Snake
             ResetBodyParts();
             snakeVariables.OnResetSnake();
             SetRandomRotation();
-            transform.position = blockManager.GetRandomPosition(false);
+            transform.position = blockManager.GetRandomPosition(false); // TODO: Add spawn points instead of random position
             SetUpInitialSize();
             ChangeDirection(blockManager.GetLastGeneratedBlockPosition());
+            
+            if (isPlayer) Controls.Enable();
         }
 
         private void SetRandomRotation()
@@ -137,9 +148,11 @@ namespace Snake
         {
             while (true)
             {
-                if (GameManager.Instance.IsGameOver()) yield break;
-                if (HasCollided()) yield break;
+                // BUG: AI is dying as soon as it touches wall without any chance to turn.
+                
                 if (!isPlayer) MoveAI();
+                if (HasCollided()) yield return null;
+                while (GameManager.Instance.IsGameOver()) yield return null;
                 MoveSnake();
 
                 yield return new WaitForSeconds(snakeVariables.Speed);
@@ -213,7 +226,7 @@ namespace Snake
 
             if (!isPlayer)
             {
-                RespawnAI();
+                ResetSnake();
                 return false;
             }
             
@@ -239,7 +252,7 @@ namespace Snake
             if (other.CompareTag("Block"))
             {
                 Block block = other.GetComponent<Block>();
-                if (block.Type == PowerUp.EnergyEngine) snakeVariables.OnPickupEnergyEngineBlock();
+                if (block.Type == PowerUp.EnginePower) snakeVariables.OnPickupEnginePowerBlock();
                 IncreaseSize();
             }
         }
@@ -250,6 +263,7 @@ namespace Snake
             Transform reference = _bodyParts[_bodyParts.Count - 1];
         
             GameObject block = Instantiate(bodyPartPrefab, reference.position - reference.right, reference.rotation);
+            block.GetComponent<SpriteRenderer>().color = color;
             _bodyParts.Add(block.transform);
             block.transform.parent = transform.parent;
         }
@@ -279,11 +293,6 @@ namespace Snake
             }
         }
 
-        private void RespawnAI()
-        {
-            ResetSnake();
-        }
-        
         private void TurnToDesiredDirection(Directions desired)
         {
             if (_currentDir == desired) return;

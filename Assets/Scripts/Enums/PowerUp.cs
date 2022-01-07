@@ -2,7 +2,7 @@ namespace Enums
 {
     public enum PowerUp
     {
-        EnergyEngine,
+        EnginePower,
         BatteringRam
     }
 }

@@ -6,13 +6,11 @@ namespace Blocks
     public class Block : MonoBehaviour
     {
         [SerializeField] BlockManager blockManager;
-        [SerializeField] private LayerMask obstacleLayer;
         public PowerUp Type { get; private set; }
-        private BoxCollider2D _collider2D;
 
         void Start()
         {
-            _collider2D = GetComponent<BoxCollider2D>();
+            GetComponent<BoxCollider2D>();
             SetUpBlock();
         }
 
@@ -24,7 +22,7 @@ namespace Blocks
 
         private void ChangePosition()
         {
-            // TODO: Blocks are spawning inside snake   
+            // BUG: Blocks are spawning inside snake
             transform.position = blockManager.GetRandomPosition(true);
         }
         
