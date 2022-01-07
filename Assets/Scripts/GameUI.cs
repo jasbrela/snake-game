@@ -1,5 +1,5 @@
-using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameUI : MonoBehaviour
 {
@@ -14,5 +14,10 @@ public class GameUI : MonoBehaviour
     private void OnGameOverStatusChanged()
     {
         gameOverPanel.SetActive(GameManager.Instance.IsGameOver());
+    }
+    
+    public void OnPressMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }
