@@ -1,26 +1,22 @@
 using Blocks;
 using Enums;
-using TMPro;
 using UnityEngine;
 
 namespace Snake
 {
     public class SnakePowerUp : MonoBehaviour
     {
-        [SerializeField] private TextMeshProUGUI text;
-        
         private int _enginePowerQuantity;
         private int _batteringRamQuantity;
         
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.CompareTag("Block"))
-            {
-                Block block = other.GetComponent<Block>();
+            if (!other.CompareTag("Block")) return;
+            
+            Block block = other.GetComponent<Block>();
 
-                AddPowerUp(block.Type);
-                block.RespawnBlock();
-            }
+            AddPowerUp(block.Type);
+            block.RespawnBlock();
         }
     
         private void AddPowerUp(PowerUp type)
@@ -28,7 +24,7 @@ namespace Snake
             switch (type)
             {
                 case PowerUp.BatteringRam:
-                    _batteringRamQuantity++; OnChangeBatteringRamQuantity();
+                    _batteringRamQuantity++;
                     break;
                 case PowerUp.EnginePower:
                     _enginePowerQuantity++;
@@ -40,14 +36,7 @@ namespace Snake
         {
             if (_batteringRamQuantity <= 0) return false;
             _batteringRamQuantity--;
-            OnChangeBatteringRamQuantity();
             return true;
         }
-
-        private void OnChangeBatteringRamQuantity()
-        {
-            if (text != null) text.text = $"x{_batteringRamQuantity}";
-        }
-
     }
 }

@@ -499,11 +499,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3261267276306348664, guid: c8b691b2ba9f2e944a1e42693778105b, type: 3}
       propertyPath: color.g
-      value: 0.2736249
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3261267276306348664, guid: c8b691b2ba9f2e944a1e42693778105b, type: 3}
       propertyPath: color.r
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3261267276306348664, guid: c8b691b2ba9f2e944a1e42693778105b, type: 3}
       propertyPath: isPlayer
@@ -595,11 +595,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6985367798202801376, guid: c8b691b2ba9f2e944a1e42693778105b, type: 3}
       propertyPath: m_Color.b
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6985367798202801376, guid: c8b691b2ba9f2e944a1e42693778105b, type: 3}
       propertyPath: m_Color.g
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6985367798202801376, guid: c8b691b2ba9f2e944a1e42693778105b, type: 3}
       propertyPath: m_Color.r
@@ -607,7 +607,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7535217261492618183, guid: c8b691b2ba9f2e944a1e42693778105b, type: 3}
       propertyPath: m_Name
-      value: AI Snake
+      value: AI
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c8b691b2ba9f2e944a1e42693778105b, type: 3}

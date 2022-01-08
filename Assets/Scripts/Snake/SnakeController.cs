@@ -14,10 +14,12 @@ namespace Snake
 
         [Header("Snake Information")]
         [SerializeField] private Color color;
+        [SerializeField] private GameObject bodyPartPrefab;
         [SerializeField] private SnakeVariables snakeVariables;
         [SerializeField] private SnakePowerUp snakePowerUp;
         [SerializeField] private int initialSnakeSize;
-    
+        [Tooltip("The order matters.")][SerializeField] private Transform[] spawnPoints;
+
         [Space(10)][Header("Player Information")]
         [Tooltip("Mark if it's not AI")][SerializeField] protected bool isPlayer;
         
@@ -29,9 +31,8 @@ namespace Snake
         [SerializeField] private BoxCollider2D pointBackLeft;
         [SerializeField] private BoxCollider2D pointBackRight;
 
-        [Space(10)][Header("Essentials")]
+        [Space(10)] [Header("Essentials")]
         [SerializeField] private BoxCollider2D pointFront;
-        [SerializeField] private GameObject bodyPartPrefab;
         [SerializeField] private LayerMask obstacleLayer;
         [SerializeField] private LayerMask wallsLayer;
         [SerializeField] private BlockManager blockManager;
@@ -62,6 +63,7 @@ namespace Snake
         
         private void Awake()
         {
+            GameManager.Instance.SetMaxSpawnPoints(spawnPoints.Length-1);
             GameManager.Instance.SendOnPressRetryCallback(ResetSnake);
             GetComponent<SpriteRenderer>().color = color;
             
@@ -87,34 +89,26 @@ namespace Snake
         {
             ResetBodyParts();
             snakeVariables.OnResetSnake();
-            SetRandomRotation();
-            transform.position = blockManager.GetRandomPosition(false); // TODO: Add spawn points instead of random position
+            SetPosition(GameManager.Instance.GetNextSpawnPoint());
             SetUpInitialSize();
             ChangeDirection(blockManager.GetLastGeneratedBlockPosition());
             
             if (isPlayer) Controls.Enable();
         }
 
-        private void SetRandomRotation()
+        private void SetPosition(int index)
+        {
+            transform.position = spawnPoints[index].position;
+            Directions first = spawnPoints[index].position.x > 0 ? Directions.Left : Directions.Right;
+            Directions second = spawnPoints[index].position.y > 0 ? Directions.Down : Directions.Up;
+            
+            SetRandomRotation(first, second);
+        }
+
+        private void SetRandomRotation(Directions one, Directions two)
         {
             float chance = Random.Range(0, 1f);
-            
-            if (chance > 0.75f)
-            {
-                Turn(Directions.Left);
-            }
-            else if (chance > 0.5f)
-            {
-                Turn(Directions.Right);
-            }
-            else if (chance > 0.25f)
-            {
-                Turn(Directions.Up);
-            }
-            else
-            {
-                Turn(Directions.Down);
-            }
+            Turn(chance > 0.5f ? one : two);
         }
 
         private void ResetBodyParts()
@@ -277,7 +271,8 @@ namespace Snake
         #region AI Part
         private void MoveAI()
         {
-            if (pointFront.IsTouchingLayers(obstacleLayer)) TurnToDesiredDirection(_currentDir + 2);
+            if (pointFront.IsTouchingLayers(obstacleLayer) ||
+                pointFront.IsTouchingLayers(wallsLayer)) TurnToDesiredDirection(_currentDir + 2);
             
             var pos = transform.position;
             var relDir = pos - _direction;

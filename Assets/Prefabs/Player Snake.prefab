@@ -157,7 +157,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 32e8ae674dbff2945ac79d7212844d6b, type: 3}
-  m_Color: {r: 0, g: 0.13725491, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -179,10 +179,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5993dd4eeefaa841b0f0ca6250819bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: {r: 1, g: 0, b: 0.58379936, a: 1}
+  color: {r: 0.8301887, g: 0.70678586, b: 0.042292565, a: 1}
+  bodyPartPrefab: {fileID: 1353628778432827786, guid: 4f938e8f652ed604381bf18e71a2ed58, type: 3}
   snakeVariables: {fileID: 4448080270642116353}
   snakePowerUp: {fileID: 497339433623435242}
   initialSnakeSize: 5
+  spawnPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   isPlayer: 1
   pointLeft: {fileID: 0}
   pointRight: {fileID: 0}
@@ -191,7 +197,6 @@ MonoBehaviour:
   pointBackLeft: {fileID: 0}
   pointBackRight: {fileID: 0}
   pointFront: {fileID: 8273167515669394502}
-  bodyPartPrefab: {fileID: 1353628778432827786, guid: 4f938e8f652ed604381bf18e71a2ed58, type: 3}
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -211,7 +216,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68463a518764f424f9c8fdb015fac479, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 0}
 --- !u!61 &7645294509785813311
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -305,4 +309,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 0.5
   weightPerBlock: 1
-  powerEngineBonus: 0
+  powerEngineBonus: 1.25

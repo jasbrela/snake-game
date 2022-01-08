@@ -41,15 +41,13 @@ namespace Blocks
             }
         }
     
-        public Vector3 GetRandomPosition(bool isBlockPosition)
+        public Vector3 GetRandomPosition()
         {
             Vector2 bounds = boundsCollider.size / 2;
             Vector2 point = new Vector2(Mathf.Round(Random.Range(-bounds.x, bounds.x)),
                 Mathf.Round(Random.Range(-bounds.y, bounds.y))) + boundsCollider.offset;
 
             var pos = boundsCollider.transform.TransformPoint(point);
-            
-            if (!isBlockPosition) return pos;
             
             _lastPosGenerated = pos;
             _onGeneratedRandomPosMethod?.Invoke(pos);

@@ -24,7 +24,9 @@ public class GameManager : MonoBehaviour
     
     public delegate void OnGameOverStatusChanged();
     private OnGameOverStatusChanged _onGameOverStatusChanged;
-    
+
+    private int _lastPickedSpawnPoint;
+    private int _maxSpawnPointIndex;
     private bool _gameOver;
 
     private void Awake()
@@ -69,5 +71,24 @@ public class GameManager : MonoBehaviour
     {
         _gameOver = isOver;
         _onGameOverStatusChanged();
+    }
+
+    public void SetMaxSpawnPoints(int index)
+    {
+        _maxSpawnPointIndex = index;
+    }
+
+    public int GetNextSpawnPoint()
+    {
+        if (_maxSpawnPointIndex == _lastPickedSpawnPoint)
+        {
+            _lastPickedSpawnPoint = 0;
+        }
+        else
+        {
+            _lastPickedSpawnPoint++;
+        }
+        
+        return _lastPickedSpawnPoint;
     }
 }

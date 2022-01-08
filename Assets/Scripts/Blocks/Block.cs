@@ -22,8 +22,8 @@ namespace Blocks
 
         private void ChangePosition()
         {
-            // BUG: Blocks are spawning inside snake
-            transform.position = blockManager.GetRandomPosition(true);
+            // TODO: Blocks can spawn inside snake
+            transform.position = blockManager.GetRandomPosition();
         }
         
         private void OnTriggerEnter2D(Collider2D other)
