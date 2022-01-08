@@ -180,7 +180,7 @@ PrefabInstance:
     - target: {fileID: 3261267276306348664, guid: c8b691b2ba9f2e944a1e42693778105b, type: 3}
       propertyPath: bodyPartPrefab
       value: 
-      objectReference: {fileID: 1353628778432827786, guid: edc71525342426d43b313abebe105169, type: 3}
+      objectReference: {fileID: 1353628778432827786, guid: 4f938e8f652ed604381bf18e71a2ed58, type: 3}
     - target: {fileID: 3261267276306348664, guid: c8b691b2ba9f2e944a1e42693778105b, type: 3}
       propertyPath: pointBackRight
       value: 
