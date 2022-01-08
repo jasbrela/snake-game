@@ -36,7 +36,7 @@ namespace Snake
         [SerializeField] private LayerMask obstacleLayer;
         [SerializeField] private LayerMask wallsLayer;
         [SerializeField] private BlockManager blockManager;
-    
+        
         // PLAYER
         private Controls _controls;
         private Controls Controls
@@ -58,7 +58,8 @@ namespace Snake
         // BOTH
         private readonly List<Transform> _bodyParts = new List<Transform>();
         private Directions _currentDir = Directions.Right;
-        private bool _canMove = true;
+        private bool _canTurn = true;
+        private bool _collided;
         #endregion
         
         private void Awake()
@@ -68,7 +69,6 @@ namespace Snake
             GetComponent<SpriteRenderer>().color = color;
             
             if (isPlayer) return;
-            enabled = true;
             blockManager.SendOnGeneratedRandomPositionCallback(ChangeDirection);
         }
 
@@ -77,7 +77,6 @@ namespace Snake
             if (isPlayer) 
             {
                 SetUpControls();
-                GameManager.Instance.ResetGame();
             }
             
             if (!isPlayer) ChangeDirection(blockManager.GetLastGeneratedBlockPosition());
@@ -144,17 +143,18 @@ namespace Snake
             {
                 // BUG: AI is dying as soon as it touches wall without any chance to turn.
                 
-                if (!isPlayer) MoveAI();
+                if (!isPlayer) TurnAI();
                 if (HasCollided()) yield return null;
                 while (GameManager.Instance.IsGameOver()) yield return null;
-                MoveSnake();
-
+                ChangeSnakePosition();
+                
                 yield return new WaitForSeconds(snakeVariables.Speed);
-                _canMove = true;
+                
+                _canTurn = true;
             }
         }
 
-        private void MoveSnake()
+        private void ChangeSnakePosition()
         {
             for (int i = _bodyParts.Count - 1; i > 0; i--)
             {
@@ -168,11 +168,11 @@ namespace Snake
 
         private void Turn(Directions dir)
         {
-            if (!_canMove) return;
+            if (!_canTurn) return;
         
-            _canMove = false;
+            _canTurn = false;
  
-            var z = transform.rotation.z;
+            float z = transform.rotation.z;
             switch (dir)
             {
                 case Directions.Left:
@@ -198,6 +198,8 @@ namespace Snake
             }
         
             transform.rotation = Quaternion.Euler(0, 0, z);
+            
+            HasCollided();
         }
 
         private bool HasCollided()
@@ -270,15 +272,15 @@ namespace Snake
         }
 
         #region AI Part
-        private void MoveAI()
+        private void TurnAI()
         {
             if (pointFront.IsTouchingLayers(obstacleLayer) ||
                 pointFront.IsTouchingLayers(wallsLayer)) TurnToDesiredDirection(_currentDir + 2);
             
-            var pos = transform.position;
-            var relDir = pos - _direction;
+            Vector3 pos = transform.position;
+            Vector3 relativePosition = pos - _direction;
             
-            if (Mathf.Abs(relDir.x) > Mathf.Abs(relDir.y))
+            if (Mathf.Abs(relativePosition.x) > Mathf.Abs(relativePosition.y))
             {
                 TurnToDesiredDirection(_direction.x > pos.x ? Directions.Right : Directions.Left);
             }
@@ -291,7 +293,7 @@ namespace Snake
         private void TurnToDesiredDirection(Directions desired)
         {
             if (_currentDir == desired) return;
-            if (!_canMove) return;
+            if (!_canTurn) return;
 
             bool avoidObstacleLeft = pointLeft.IsTouchingLayers(obstacleLayer);
             bool avoidObstacleRight = pointRight.IsTouchingLayers(obstacleLayer);

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -39,6 +40,11 @@ public class GameManager : MonoBehaviour
         {
             _instance = this;
         }
+    }
+
+    private void Start()
+    {
+        ResetGame();
     }
 
     public void SendOnPressRetryCallback(OnPressRetry callback)
