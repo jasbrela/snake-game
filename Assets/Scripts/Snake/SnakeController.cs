@@ -18,25 +18,18 @@ namespace Snake
         [SerializeField] private SnakeVariables snakeVariables;
         [SerializeField] private SnakePowerUp snakePowerUp;
         [SerializeField] private int initialSnakeSize;
-        [Tooltip("The order matters.")][SerializeField] private Transform[] spawnPoints;
 
-        [Space(10)][Header("Player Information")]
-        [Tooltip("Mark if it's not AI")][SerializeField] protected bool isPlayer;
-        
-        [Space(10)][Header("AI Information - No need to fill in if it's not AI.")]
-        [SerializeField] private BoxCollider2D pointLeft;
-        [SerializeField] private BoxCollider2D pointRight;
-        [SerializeField] private BoxCollider2D pointFrontLeft;
-        [SerializeField] private BoxCollider2D pointFrontRight;
-        [SerializeField] private BoxCollider2D pointBackLeft;
-        [SerializeField] private BoxCollider2D pointBackRight;
+        [Space(10)][Header("AI Information - AIController can be null")]
+        [Tooltip("Mark if it's not AI")]
+        [SerializeField] protected bool isAI;
+        [SerializeField] private AIController AIController;
 
         [Space(10)] [Header("Essentials")]
         [SerializeField] private BoxCollider2D pointFront;
-        [SerializeField] private LayerMask obstacleLayer;
+        [Tooltip("This layer allow the snake to use its battering ram blocks before dying")]
+        [SerializeField] private LayerMask obstaclesLayer;
+        [Tooltip("This layer will kill the snake instantly")]
         [SerializeField] private LayerMask wallsLayer;
-        [SerializeField] private BlockManager blockManager;
-        
         // PLAYER
         private Controls _controls;
         private Controls Controls
@@ -64,22 +57,22 @@ namespace Snake
         
         private void Awake()
         {
-            GameManager.Instance.SetMaxSpawnPoints(spawnPoints.Length-1);
             GameManager.Instance.SendOnPressRetryCallback(ResetSnake);
             GetComponent<SpriteRenderer>().color = color;
-            
-            if (isPlayer) return;
-            blockManager.SendOnGeneratedRandomPositionCallback(ChangeDirection);
         }
 
         private void Start()
         {
-            if (isPlayer) 
+            if (!isAI) 
             {
                 SetUpControls();
             }
-            
-            if (!isPlayer) ChangeDirection(blockManager.GetLastGeneratedBlockPosition());
+
+            if (isAI)
+            {
+                BlockManager.Instance.SendOnGeneratedRandomPositionCallback(ChangeDirection);
+                ChangeDirection(BlockManager.Instance.GetLastGeneratedBlockPosition());
+            }
             
             StartCoroutine(Move());
         }
@@ -89,18 +82,21 @@ namespace Snake
             snakePowerUp.ResetPowerUps();
             ResetBodyParts();
             snakeVariables.OnResetSnake();
-            SetPosition(GameManager.Instance.GetNextSpawnPoint());
+            SetPosition();
             SetUpInitialSize();
-            ChangeDirection(blockManager.GetLastGeneratedBlockPosition());
+            ChangeDirection(BlockManager.Instance.GetLastGeneratedBlockPosition());
             
-            if (isPlayer) Controls.Enable();
+            if (!isAI) Controls.Enable();
         }
 
-        private void SetPosition(int index)
+        private void SetPosition()
         {
-            transform.position = spawnPoints[index].position;
-            Directions first = spawnPoints[index].position.x > 0 ? Directions.Left : Directions.Right;
-            Directions second = spawnPoints[index].position.y > 0 ? Directions.Down : Directions.Up;
+            Vector3 spawnPoint = GameManager.Instance.GetNextSpawnPoint().position;
+            
+            transform.position = spawnPoint;
+            
+            Directions first = spawnPoint.x > 0 ? Directions.Left : Directions.Right;
+            Directions second = spawnPoint.y > 0 ? Directions.Down : Directions.Up;
             
             SetRandomRotation(first, second);
         }
@@ -143,7 +139,7 @@ namespace Snake
             {
                 // BUG: AI is dying as soon as it touches wall without any chance to turn.
                 
-                if (!isPlayer) TurnAI();
+                if (isAI) TurnAI();
                 if (HasCollided()) yield return null;
                 while (GameManager.Instance.IsGameOver()) yield return null;
                 ChangeSnakePosition();
@@ -166,9 +162,9 @@ namespace Snake
             t.position += t.right;
         }
 
-        private void Turn(Directions dir)
+        private void Turn(Directions? dir)
         {
-            if (!_canTurn) return;
+            if (!_canTurn || dir == null) return;
         
             _canTurn = false;
  
@@ -204,7 +200,7 @@ namespace Snake
 
         private bool HasCollided()
         {
-            bool isTouchingObstacle = pointFront.IsTouchingLayers(obstacleLayer);
+            bool isTouchingObstacle = pointFront.IsTouchingLayers(obstaclesLayer);
             bool isTouchingWalls = pointFront.IsTouchingLayers(wallsLayer);
 
             if (!isTouchingObstacle && !isTouchingWalls) return false;
@@ -220,7 +216,7 @@ namespace Snake
                 }
             }
 
-            if (!isPlayer)
+            if (isAI)
             {
                 ResetSnake();
                 return false;
@@ -232,7 +228,7 @@ namespace Snake
 
         private void GameOver()
         {
-            if (isPlayer)
+            if (!isAI)
             {
                 GameManager.Instance.EndGame();
                 Controls.Disable();
@@ -274,7 +270,7 @@ namespace Snake
         #region AI Part
         private void TurnAI()
         {
-            if (pointFront.IsTouchingLayers(obstacleLayer) ||
+            if (pointFront.IsTouchingLayers(obstaclesLayer) ||
                 pointFront.IsTouchingLayers(wallsLayer)) TurnToDesiredDirection(_currentDir + 2);
             
             Vector3 pos = transform.position;
@@ -295,8 +291,8 @@ namespace Snake
             if (_currentDir == desired) return;
             if (!_canTurn) return;
 
-            bool avoidObstacleLeft = pointLeft.IsTouchingLayers(obstacleLayer);
-            bool avoidObstacleRight = pointRight.IsTouchingLayers(obstacleLayer);
+            bool avoidLeft = AIController.IsLeftPointColliding();
+            bool avoidRight = AIController.IsRightPointColliding();
 
             var value = _currentDir - desired;
 
@@ -304,21 +300,21 @@ namespace Snake
             {
                 case 1:
                 case -3:
-                    if (avoidObstacleLeft) return;
+                    if (avoidLeft) return;
                     Turn(GetLeftDirection());
                     break;
                 case -2:
                 case 2:
-                    switch (avoidObstacleLeft)
+                    switch (avoidLeft)
                     {
-                        case true when avoidObstacleRight:
+                        case true when avoidRight:
                             return;
                         
                         case true:
                             Turn(GetRightDirection());
                             break;
                         
-                        case false when avoidObstacleRight:
+                        case false when avoidRight:
                             Turn(GetLeftDirection());
                             break;
                         case false:
@@ -328,23 +324,23 @@ namespace Snake
                     break;
                 case -1:
                 case 3:
-                    if (avoidObstacleRight) return;
+                    if (avoidRight) return;
                     Turn(GetRightDirection());
                     break;
             }
         }
 
-        private Directions GetCorrectDirection()
+        private Directions? GetCorrectDirection()
         {
-            int leftSum = 0;
-            int rightSum = 0;
-            
-            if (pointFrontLeft.IsTouchingLayers(obstacleLayer)) leftSum++;
-            if (pointFrontRight.IsTouchingLayers(obstacleLayer)) leftSum++;
-            if (pointBackLeft.IsTouchingLayers(obstacleLayer)) rightSum++;
-            if (pointBackRight.IsTouchingLayers(obstacleLayer)) rightSum++;
-
-            return leftSum > rightSum ? GetLeftDirection() : GetRightDirection();
+            Directions side = AIController.GetTheFreerSide();
+            switch (side)
+            {
+                case Directions.Left:
+                    return GetLeftDirection();
+                case Directions.Right:
+                    return GetRightDirection();
+            }
+            return null;
         }
         
         private Directions GetRightDirection()

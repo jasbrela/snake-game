@@ -7,50 +7,62 @@ namespace Blocks
 {
     public class BlockManager : MonoBehaviour
     {
-        [SerializeField] private BoxCollider2D boundsCollider;
-        [SerializeField] private GameObject batteringRam;
-        [SerializeField] private GameObject energyEngine;
-        
-        private Vector3 _lastPosGenerated;
-        public delegate void OnGeneratedRandomPosDelegate(Vector3 pos);
-        private OnGeneratedRandomPosDelegate _onGeneratedRandomPosMethod;
+        #region Singleton
+        private static BlockManager _instance;
 
+        public static BlockManager Instance
+        {
+            get
+            {
+                if (_instance != null) return _instance;
+                
+                GameObject go = new GameObject("Block Manager");
+                go.AddComponent<BlockManager>();
+                return _instance;
+            }
+        }
+        #endregion
+
+        private BoxCollider2D _boundsCollider;
+        private Vector3 _lastPosGenerated;
+        public delegate void OnGeneratedRandomPos(Vector3 pos);
+        private OnGeneratedRandomPos _onGeneratedRandomPos;
+        
+        private void Awake()
+        {
+            if (_instance != null && _instance != this)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                _instance = this;
+            }
+        }
+        
         public PowerUp GetRandomBlockType()
         {
             double rollBuff = Math.Round(Random.Range(0f, 1f), 2);
         
             if (rollBuff > 0.5f)
             {
-                batteringRam.SetActive(true);
                 return PowerUp.BatteringRam;
             }
-
-            energyEngine.SetActive(true);
+            
             return PowerUp.EnginePower;
         }
-
-        public void ResetBlock()
-        {
-            if (batteringRam.activeSelf)
-            {
-                batteringRam.SetActive(false);
-            }
-            if (energyEngine.activeSelf)
-            {
-                energyEngine.SetActive(false);
-            }
-        }
+        
     
         public Vector3 GetRandomPosition()
         {
-            Vector2 bounds = boundsCollider.size / 2;
+            Vector2 bounds = _boundsCollider.size / 2;
             Vector2 point = new Vector2(Mathf.Round(Random.Range(-bounds.x, bounds.x)),
-                Mathf.Round(Random.Range(-bounds.y, bounds.y))) + boundsCollider.offset;
+                Mathf.Round(Random.Range(-bounds.y, bounds.y))) + _boundsCollider.offset;
 
-            var pos = boundsCollider.transform.TransformPoint(point);
+            var pos = _boundsCollider.transform.TransformPoint(point);
             
             _lastPosGenerated = pos;
-            _onGeneratedRandomPosMethod?.Invoke(pos);
+            _onGeneratedRandomPos?.Invoke(pos);
 
             return pos;
         }
@@ -60,9 +72,14 @@ namespace Blocks
             return _lastPosGenerated;
         }
 
-        public void SendOnGeneratedRandomPositionCallback(OnGeneratedRandomPosDelegate method)
+        public void SendOnGeneratedRandomPositionCallback(OnGeneratedRandomPos onGeneratedRandomPos)
         {
-            _onGeneratedRandomPosMethod = method;
+            _onGeneratedRandomPos = onGeneratedRandomPos;
+        }
+
+        public void SendBoundsCollider(BoxCollider2D box)
+        {
+            _boundsCollider = box;
         }
     }
 }

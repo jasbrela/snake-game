@@ -263,31 +263,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5993dd4eeefaa841b0f0ca6250819bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: {r: 0.8301887, g: 0.70678586, b: 0.042292565, a: 1}
+  color: {r: 0.5656455, g: 1, b: 0.23018867, a: 1}
   bodyPartPrefab: {fileID: 1353628778432827786, guid: 4f938e8f652ed604381bf18e71a2ed58, type: 3}
   snakeVariables: {fileID: 4448080270642116353}
   snakePowerUp: {fileID: 497339433623435242}
   initialSnakeSize: 5
-  spawnPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  isPlayer: 1
-  pointLeft: {fileID: 0}
-  pointRight: {fileID: 0}
-  pointFrontLeft: {fileID: 0}
-  pointFrontRight: {fileID: 0}
-  pointBackLeft: {fileID: 0}
-  pointBackRight: {fileID: 0}
+  isAI: 0
+  AIController: {fileID: 0}
   pointFront: {fileID: 8273167515669394502}
-  obstacleLayer:
+  obstaclesLayer:
     serializedVersion: 2
     m_Bits: 64
   wallsLayer:
     serializedVersion: 2
     m_Bits: 128
-  blockManager: {fileID: 0}
 --- !u!114 &497339433623435242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -394,4 +383,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 0.5
   weightPerBlock: 1
-  powerEngineBonus: 1.25
+  powerEngineBonus: 1.15

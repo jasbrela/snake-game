@@ -25,7 +25,7 @@ namespace Snake
             Block block = other.GetComponent<Block>();
 
             AddPowerUp(block.Type);
-            block.RespawnBlock();
+            block.Respawn();
         }
     
         private void AddPowerUp(PowerUp type)

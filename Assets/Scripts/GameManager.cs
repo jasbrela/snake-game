@@ -1,4 +1,5 @@
-using System;
+using Blocks;
+using JetBrains.Annotations;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -19,14 +20,18 @@ public class GameManager : MonoBehaviour
         }
     }
     #endregion
-    
+
+    #region Callbacks
     public delegate void OnPressRetry();
     private OnPressRetry _onPressRetry;
     
     public delegate void OnGameOverStatusChanged();
     private OnGameOverStatusChanged _onGameOverStatusChanged;
+    
+    public delegate Transform GetSpawnPoint();
+    private GetSpawnPoint _getSpawnPoint;
+    #endregion
 
-    private int _lastPickedSpawnPoint;
     private int _maxSpawnPointIndex;
     private bool _gameOver;
 
@@ -47,15 +52,23 @@ public class GameManager : MonoBehaviour
         ResetGame();
     }
 
+    #region Receive Callbacks
     public void SendOnPressRetryCallback(OnPressRetry callback)
-    {
-        _onPressRetry += callback;
-    }
-    
-    public void SendOnGameOverStatusChangedCallback(OnGameOverStatusChanged callback)
-    {
-        _onGameOverStatusChanged += callback;
-    }
+        {
+            _onPressRetry += callback;
+        }
+        
+        public void SendOnGameOverStatusChangedCallback(OnGameOverStatusChanged callback)
+        {
+            _onGameOverStatusChanged += callback;
+        }
+
+        public void SendGetSpawnPointsCallback(GetSpawnPoint spawnPoint)
+        {
+            _getSpawnPoint += spawnPoint;
+        }
+        #endregion
+
 
     public void EndGame()
     {
@@ -79,22 +92,8 @@ public class GameManager : MonoBehaviour
         _onGameOverStatusChanged();
     }
 
-    public void SetMaxSpawnPoints(int index)
+    public Transform GetNextSpawnPoint()
     {
-        _maxSpawnPointIndex = index;
-    }
-
-    public int GetNextSpawnPoint()
-    {
-        if (_maxSpawnPointIndex == _lastPickedSpawnPoint)
-        {
-            _lastPickedSpawnPoint = 0;
-        }
-        else
-        {
-            _lastPickedSpawnPoint++;
-        }
-        
-        return _lastPickedSpawnPoint;
+        return _getSpawnPoint();
     }
 }

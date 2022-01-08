@@ -5,25 +5,50 @@ namespace Blocks
 {
     public class Block : MonoBehaviour
     {
-        [SerializeField] BlockManager blockManager;
+        [SerializeField] private BoxCollider2D boundsCollider;
+        [SerializeField] private GameObject batteringRam;
+        [SerializeField] private GameObject enginePower;
         public PowerUp Type { get; private set; }
 
         void Start()
         {
-            GetComponent<BoxCollider2D>();
+            BlockManager.Instance.SendBoundsCollider(boundsCollider);
             SetUpBlock();
+        }
+
+        private void ResetBlock()
+        {
+            if (batteringRam.activeInHierarchy)
+            {
+                batteringRam.SetActive(false);
+            }
+            
+            if (enginePower.activeInHierarchy)
+            {
+                enginePower.SetActive(false);
+            }
         }
 
         private void SetUpBlock()
         {
             ChangePosition();
-            Type = blockManager.GetRandomBlockType();
+            Type = BlockManager.Instance.GetRandomBlockType();
+            
+            switch (Type)
+            {
+                case PowerUp.BatteringRam:
+                    batteringRam.SetActive(true);
+                    break;
+                case PowerUp.EnginePower:
+                    enginePower.SetActive(true);
+                    break;
+            }
         }
 
         private void ChangePosition()
         {
             // TODO: Blocks can spawn inside snake
-            transform.position = blockManager.GetRandomPosition();
+            transform.position = BlockManager.Instance.GetRandomPosition();
         }
         
         private void OnTriggerEnter2D(Collider2D other)
@@ -34,9 +59,9 @@ namespace Blocks
             }
         }
 
-        public void RespawnBlock()
+        public void Respawn()
         {
-            blockManager.ResetBlock();
+            ResetBlock();
             SetUpBlock();
         }
 
