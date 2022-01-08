@@ -87,6 +87,7 @@ namespace Snake
 
         private void ResetSnake()
         {
+            snakePowerUp.ResetPowerUps();
             ResetBodyParts();
             snakeVariables.OnResetSnake();
             SetPosition(GameManager.Instance.GetNextSpawnPoint());
