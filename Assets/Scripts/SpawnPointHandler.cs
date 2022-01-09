@@ -13,6 +13,10 @@ public class SpawnPointHandler : MonoBehaviour
         GameManager.Instance.SendGetSpawnPointsCallback(GetNextSpawnPoint);
     }
 
+    /// <summary>
+    /// Handles the spawn points cycle.
+    /// </summary>
+    /// <returns>Returns the next spawn point.</returns>
     private Transform GetNextSpawnPoint()
     {
         if (spawnPoints.Length-1 == _lastPickedSpawnPoint)

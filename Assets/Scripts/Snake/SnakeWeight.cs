@@ -18,21 +18,33 @@ namespace Snake
             _defaultSpeed = speed;
         }
 
+        /// <summary>
+        /// Increase snake's speed whenever the snake pick up the Engine Power block.
+        /// </summary>
         public void OnPickupEnginePowerBlock()
         {
             speed -= PowerEngineBonus;
         }
 
+        /// <summary>
+        /// Decrease snake's speed whenever the snake pick up any block.
+        /// </summary>
         public void OnPickupAnyBlock()
         {
             speed += WeightPerBlock;
         }
 
+        /// <summary>
+        /// Increase snake's speed whenever the snake use its Battering Ram block.
+        /// </summary>
         public void OnUseBatteringRam()
         {
             speed -= WeightPerBlock;
         }
 
+        /// <summary>
+        /// Reset the snake's speed to default.
+        /// </summary>
         public void OnResetSnake()
         {
             speed = _defaultSpeed;

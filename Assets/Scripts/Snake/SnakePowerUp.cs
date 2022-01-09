@@ -10,6 +10,9 @@ namespace Snake
         private int _enginePowerQuantity;
         private int _batteringRamQuantity;
 
+        /// <summary>
+        /// Reset the power up quantities to zero and hide the Battering Ram Sprite
+        /// </summary>
         public void ResetPowerUps()
         {
             if (batteringRam.activeInHierarchy) batteringRam.SetActive(false);
@@ -27,6 +30,10 @@ namespace Snake
             blockController.Respawn();
         }
     
+        /// <summary>
+        /// Add one to the power-ups type quantity and show the Battering Ram sprite if necessary.
+        /// </summary>
+        /// <param name="type">Power Up Type</param>
         private void AddPowerUp(PowerUp type)
         {
             switch (type)
@@ -41,9 +48,15 @@ namespace Snake
             }
         }
 
+        /// <summary>
+        /// If the player has at least one Battering Ram block, it uses one.
+        /// If it has only one, it also hides the Battering Ram sprite.
+        /// </summary>
+        /// <returns>A bool regarding the result of the use attempt.</returns>
         public bool TryUseBatteringRam()
         {
             if (_batteringRamQuantity <= 0) return false;
+            
             _batteringRamQuantity--;
             if (batteringRam.activeSelf && _batteringRamQuantity == 0) batteringRam.SetActive(false);
             return true;

@@ -13,11 +13,17 @@ namespace UI
             GameManager.Instance.SendOnGameOverStatusChangedCallback(OnGameOverStatusChanged);
         }
 
+        /// <summary>
+        /// Show or hide the Game Over panel.
+        /// </summary>
         private void OnGameOverStatusChanged()
         {
             gameOverPanel.SetActive(GameManager.Instance.IsGameOver());
         }
     
+        /// <summary>
+        /// Loads the Main Menu scene.
+        /// </summary>
         public void OnPressMainMenu()
         {
             SceneManager.LoadScene("MainMenu");

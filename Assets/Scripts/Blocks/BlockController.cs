@@ -16,6 +16,9 @@ namespace Blocks
             SetUpBlock();
         }
 
+        /// <summary>
+        /// Hide the block.
+        /// </summary>
         private void ResetBlock()
         {
             if (batteringRam.activeInHierarchy)
@@ -29,6 +32,9 @@ namespace Blocks
             }
         }
 
+        /// <summary>
+        /// Show the right block regarding to its type.
+        /// </summary>
         private void SetUpBlock()
         {
             ChangePosition();
@@ -45,9 +51,11 @@ namespace Blocks
             }
         }
 
+        /// <summary>
+        /// Change the block position to a random one.
+        /// </summary>
         private void ChangePosition()
         {
-            // TODO: Blocks can spawn inside snake
             transform.position = BlockManager.Instance.GetRandomPosition();
         }
         
@@ -59,6 +67,9 @@ namespace Blocks
             }
         }
 
+        /// <summary>
+        /// Respawn the block.
+        /// </summary>
         public void Respawn()
         {
             ResetBlock();
