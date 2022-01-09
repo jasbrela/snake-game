@@ -178,7 +178,7 @@ GameObject:
   - component: {fileID: 2717146131718107273}
   m_Layer: 6
   m_Name: Head
-  m_TagString: Player
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -265,11 +265,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   color: {r: 0.5656455, g: 1, b: 0.23018867, a: 1}
   bodyPartPrefab: {fileID: 1353628778432827786, guid: 4f938e8f652ed604381bf18e71a2ed58, type: 3}
-  snakeVariables: {fileID: 4448080270642116353}
+  snakeWeight: {fileID: 4448080270642116353}
   snakePowerUp: {fileID: 497339433623435242}
   initialSnakeSize: 5
   isAI: 0
-  AIController: {fileID: 0}
+  aiHandler: {fileID: 0}
   pointFront: {fileID: 8273167515669394502}
   obstaclesLayer:
     serializedVersion: 2

@@ -154,6 +154,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3261267276306348664, guid: c8b691b2ba9f2e944a1e42693778105b, type: 3}
+      propertyPath: aiHandler
+      value: 
+      objectReference: {fileID: 7599828510656711402}
+    - target: {fileID: 3261267276306348664, guid: c8b691b2ba9f2e944a1e42693778105b, type: 3}
       propertyPath: pointLeft
       value: 
       objectReference: {fileID: 7311756664677012642}
@@ -244,6 +248,10 @@ PrefabInstance:
     - target: {fileID: 6495076846855267201, guid: c8b691b2ba9f2e944a1e42693778105b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6985367798202801379, guid: c8b691b2ba9f2e944a1e42693778105b, type: 3}
+      propertyPath: m_TagString
+      value: Obstacle
       objectReference: {fileID: 0}
     - target: {fileID: 7535217261492618183, guid: c8b691b2ba9f2e944a1e42693778105b, type: 3}
       propertyPath: m_Name

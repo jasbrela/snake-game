@@ -19,7 +19,7 @@ namespace Snake
         [SerializeField] private SnakePowerUp snakePowerUp;
         [SerializeField] private int initialSnakeSize;
 
-        [Space(10)][Header("AI Information - AIHandler can be null")]
+        [Space(10)][Header("AI Information - AIHandler can be null if it's not AI")]
         [Tooltip("Mark if it's not AI")]
         [SerializeField] protected bool isAI;
         [SerializeField] private AIHandler aiHandler;
@@ -30,6 +30,7 @@ namespace Snake
         [SerializeField] private LayerMask obstaclesLayer;
         [Tooltip("This layer will kill the snake instantly")]
         [SerializeField] private LayerMask wallsLayer;
+        
         // PLAYER
         private Controls _controls;
         private Controls Controls
