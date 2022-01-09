@@ -11,7 +11,7 @@ namespace Snake
         private int _batteringRamQuantity;
 
         /// <summary>
-        /// Reset the power up quantities to zero and hide the Battering Ram Sprite
+        /// Reset the power-up quantities to zero and hide the Battering Ram Sprite
         /// </summary>
         public void ResetPowerUps()
         {
@@ -33,7 +33,7 @@ namespace Snake
         /// <summary>
         /// Add one to the power-ups type quantity and show the Battering Ram sprite if necessary.
         /// </summary>
-        /// <param name="type">Power Up Type</param>
+        /// <param name="type">Power-Up Type</param>
         private void AddPowerUp(PowerUp type)
         {
             switch (type)

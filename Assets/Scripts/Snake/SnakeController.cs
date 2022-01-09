@@ -23,6 +23,9 @@ namespace Snake
         [Tooltip("Mark if it's not AI")]
         [SerializeField] protected bool isAI;
         [SerializeField] private AIHandler aiHandler;
+        
+        [Space(10)][Header("Player Input - Check to use two keys, Uncheck to use four keys")]
+        [SerializeField] private bool isTwoKeysMovement;
 
         [Space(10)] [Header("Essentials")]
         [SerializeField] private BoxCollider2D pointFront;
@@ -150,10 +153,18 @@ namespace Snake
         /// </summary>
         private void SetUpControls()
         {
-            Controls.Player.TurnLeft.performed += _ => Turn(Directions.Left);
-            Controls.Player.TurnRight.performed += _ => Turn(Directions.Right);
-            Controls.Player.TurnUp.performed += _ => Turn(Directions.Up);
-            Controls.Player.TurnDown.performed += _ => Turn(Directions.Down);
+            if (isTwoKeysMovement)
+            {
+                Controls.Player.TurnLeft.performed += _ => Turn(GetLeftDirection());
+                Controls.Player.TurnRight.performed += _ => Turn(GetRightDirection());
+            }
+            else
+            {
+                Controls.Player.TurnLeft.performed += _ => Turn(Directions.Left);
+                Controls.Player.TurnRight.performed += _ => Turn(Directions.Right);
+                Controls.Player.TurnUp.performed += _ => Turn(Directions.Up);
+                Controls.Player.TurnDown.performed += _ => Turn(Directions.Down);
+            }
         }
 
         /// <summary>
