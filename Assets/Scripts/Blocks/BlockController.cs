@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Blocks
 {
-    public class Block : MonoBehaviour
+    public class BlockController : MonoBehaviour
     {
         [SerializeField] private BoxCollider2D boundsCollider;
         [SerializeField] private GameObject batteringRam;

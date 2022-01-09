@@ -1,23 +1,26 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameUI : MonoBehaviour
+namespace UI
 {
-    [SerializeField] private GameObject gameOverPanel;
-
-    private void Awake()
+    public class GameUI : MonoBehaviour
     {
-        if (gameOverPanel.activeInHierarchy) gameOverPanel.SetActive(false);
-        GameManager.Instance.SendOnGameOverStatusChangedCallback(OnGameOverStatusChanged);
-    }
+        [SerializeField] private GameObject gameOverPanel;
 
-    private void OnGameOverStatusChanged()
-    {
-        gameOverPanel.SetActive(GameManager.Instance.IsGameOver());
-    }
+        private void Awake()
+        {
+            if (gameOverPanel.activeInHierarchy) gameOverPanel.SetActive(false);
+            GameManager.Instance.SendOnGameOverStatusChangedCallback(OnGameOverStatusChanged);
+        }
+
+        private void OnGameOverStatusChanged()
+        {
+            gameOverPanel.SetActive(GameManager.Instance.IsGameOver());
+        }
     
-    public void OnPressMainMenu()
-    {
-        SceneManager.LoadScene("MainMenu");
+        public void OnPressMainMenu()
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
     }
 }

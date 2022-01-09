@@ -1,5 +1,3 @@
-using Blocks;
-using JetBrains.Annotations;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour

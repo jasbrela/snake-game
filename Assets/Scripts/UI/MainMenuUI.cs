@@ -1,10 +1,13 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MainMenuUI : MonoBehaviour
+namespace UI
 {
-    public void OnPressStart()
+    public class MainMenuUI : MonoBehaviour
     {
-        SceneManager.LoadScene("Game");
+        public void OnPressStart()
+        {
+            SceneManager.LoadScene("Game");
+        }
     }
 }

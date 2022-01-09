@@ -1,7 +1,7 @@
 using Enums;
 using UnityEngine;
 
-public class AIController : MonoBehaviour
+public class AIHandler : MonoBehaviour
 {
     [Header("Collision Predictor Points")]
     [SerializeField] private BoxCollider2D pointLeft;

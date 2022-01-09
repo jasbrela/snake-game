@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SpawnPointManager : MonoBehaviour
+public class SpawnPointHandler : MonoBehaviour
 {
     [Header("NOTE: The order matters.")]
     [Tooltip("The first will be the first, second will be the second and so on")]

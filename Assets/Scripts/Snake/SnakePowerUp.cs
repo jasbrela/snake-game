@@ -1,4 +1,3 @@
-using System;
 using Blocks;
 using Enums;
 using UnityEngine;
@@ -22,10 +21,10 @@ namespace Snake
         {
             if (!other.CompareTag("Block")) return;
             
-            Block block = other.GetComponent<Block>();
+            BlockController blockController = other.GetComponent<BlockController>();
 
-            AddPowerUp(block.Type);
-            block.Respawn();
+            AddPowerUp(blockController.Type);
+            blockController.Respawn();
         }
     
         private void AddPowerUp(PowerUp type)

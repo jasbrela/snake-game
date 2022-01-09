@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Snake
 {
-    public class SnakeVariables : MonoBehaviour
+    public class SnakeWeight : MonoBehaviour
     {
         [Tooltip("The smaller the value the faster")][SerializeField] private float speed;
         [SerializeField] private float weightPerBlock;

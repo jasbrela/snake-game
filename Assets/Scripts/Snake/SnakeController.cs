@@ -15,14 +15,14 @@ namespace Snake
         [Header("Snake Information")]
         [SerializeField] private Color color;
         [SerializeField] private GameObject bodyPartPrefab;
-        [SerializeField] private SnakeVariables snakeVariables;
+        [SerializeField] private SnakeWeight snakeWeight;
         [SerializeField] private SnakePowerUp snakePowerUp;
         [SerializeField] private int initialSnakeSize;
 
-        [Space(10)][Header("AI Information - AIController can be null")]
+        [Space(10)][Header("AI Information - AIHandler can be null")]
         [Tooltip("Mark if it's not AI")]
         [SerializeField] protected bool isAI;
-        [SerializeField] private AIController AIController;
+        [SerializeField] private AIHandler aiHandler;
 
         [Space(10)] [Header("Essentials")]
         [SerializeField] private BoxCollider2D pointFront;
@@ -81,7 +81,7 @@ namespace Snake
         {
             snakePowerUp.ResetPowerUps();
             ResetBodyParts();
-            snakeVariables.OnResetSnake();
+            snakeWeight.OnResetSnake();
             SetPosition();
             SetUpInitialSize();
             ChangeDirection(BlockManager.Instance.GetLastGeneratedBlockPosition());
@@ -144,7 +144,7 @@ namespace Snake
                 while (GameManager.Instance.IsGameOver()) yield return null;
                 ChangeSnakePosition();
                 
-                yield return new WaitForSeconds(snakeVariables.Speed);
+                yield return new WaitForSeconds(snakeWeight.Speed);
                 
                 _canTurn = true;
             }
@@ -243,15 +243,15 @@ namespace Snake
         {
             if (other.CompareTag("Block"))
             {
-                Block block = other.GetComponent<Block>();
-                if (block.Type == PowerUp.EnginePower) snakeVariables.OnPickupEnginePowerBlock();
+                BlockController blockController = other.GetComponent<BlockController>();
+                if (blockController.Type == PowerUp.EnginePower) snakeWeight.OnPickupEnginePowerBlock();
                 IncreaseSize();
             }
         }
 
         private void IncreaseSize()
         {
-            snakeVariables.OnPickupAnyBlock();
+            snakeWeight.OnPickupAnyBlock();
             Transform reference = _bodyParts[_bodyParts.Count - 1];
         
             GameObject block = Instantiate(bodyPartPrefab, reference.position - reference.right, reference.rotation);
@@ -262,7 +262,7 @@ namespace Snake
 
         private void DecreaseSize()
         {
-            snakeVariables.OnUseBatteringRam();
+            snakeWeight.OnUseBatteringRam();
             Destroy(_bodyParts[_bodyParts.Count - 1].gameObject);
             _bodyParts.RemoveAt(_bodyParts.Count - 1);
         }
@@ -291,8 +291,8 @@ namespace Snake
             if (_currentDir == desired) return;
             if (!_canTurn) return;
 
-            bool avoidLeft = AIController.IsLeftPointColliding();
-            bool avoidRight = AIController.IsRightPointColliding();
+            bool avoidLeft = aiHandler.IsLeftPointColliding();
+            bool avoidRight = aiHandler.IsRightPointColliding();
 
             var value = _currentDir - desired;
 
@@ -332,7 +332,7 @@ namespace Snake
 
         private Directions? GetCorrectDirection()
         {
-            Directions side = AIController.GetTheFreerSide();
+            Directions side = aiHandler.GetTheFreerSide();
             switch (side)
             {
                 case Directions.Left:
