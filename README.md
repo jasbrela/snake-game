@@ -15,4 +15,4 @@ Each block you pick will slow down your snake a little bit. The power-ups are ac
 - Press **D** to turn right.
 
 ## Code Architecture Diagram
-![Code Architecture Diagram](docs/Diagram.png)
+![Code Architecture Diagram](docs/code_diagram.png)
