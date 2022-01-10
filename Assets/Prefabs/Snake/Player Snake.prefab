@@ -270,6 +270,7 @@ MonoBehaviour:
   initialSnakeSize: 5
   isAI: 0
   aiHandler: {fileID: 0}
+  isTwoKeysMovement: 1
   pointFront: {fileID: 8273167515669394502}
   obstaclesLayer:
     serializedVersion: 2

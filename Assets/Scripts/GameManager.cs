@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -26,7 +27,7 @@ public class GameManager : MonoBehaviour
     public delegate void OnGameOverStatusChanged();
     private OnGameOverStatusChanged _onGameOverStatusChanged;
     
-    public delegate Transform GetSpawnPoint();
+    public delegate Vector3 GetSpawnPoint();
     private GetSpawnPoint _getSpawnPoint;
     #endregion
 
@@ -47,7 +48,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        ResetGame();
+        StartCoroutine(StartGame());
     }
 
     #region Receive Callbacks
@@ -91,14 +92,24 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Reset the game and restart the game.
+    /// Waits for the first frame to end, then start the game.
+    /// </summary>
+    public IEnumerator StartGame()
+    {
+        yield return new WaitForEndOfFrame(); // Because the Spawn Positions will only
+                                              // get updated after the first frame.
+        ResetGame();
+    }
+
+    /// <summary>
+    /// Resets the game
     /// </summary>
     public void ResetGame()
     {
         _onPressRetry?.Invoke();
         ChangeGameOverStatus(false);
     }
-    
+
     /// <summary>
     /// Used to check if the game is or not over.
     /// </summary>
@@ -119,10 +130,10 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Called by the Player to get the next spawn point.
+    /// Called by the Player to get the next spawn point position.
     /// </summary>
-    /// <returns>A transform of the next spawn point.</returns>
-    public Transform GetNextSpawnPoint()
+    /// <returns>A Vector3 of the next spawn point position.</returns>
+    public Vector3 GetNextSpawnPointPosition()
     {
         return _getSpawnPoint();
     }

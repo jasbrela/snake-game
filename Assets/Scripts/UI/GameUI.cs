@@ -1,3 +1,4 @@
+using Enums;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -26,7 +27,7 @@ namespace UI
         /// </summary>
         public void OnPressMainMenu()
         {
-            SceneManager.LoadScene("MainMenu");
+            SceneManager.LoadScene(Scenes.MainMenu.ToString());
         }
     }
 }

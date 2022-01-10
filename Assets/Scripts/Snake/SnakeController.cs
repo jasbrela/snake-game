@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 
 namespace Snake
 {
+    [RequireComponent(typeof(SpriteRenderer), typeof(Rigidbody2D), typeof(Collider2D))]
     public class SnakeController : MonoBehaviour
     {
         #region Variables
@@ -53,6 +54,7 @@ namespace Snake
         private Vector3 _direction;
         
         // BOTH
+        private SpriteRenderer _headSprite;
         private readonly List<Transform> _bodyParts = new List<Transform>();
         private Directions _currentDir = Directions.Right;
         private bool _canTurn = true;
@@ -63,7 +65,8 @@ namespace Snake
         private void Awake()
         {
             GameManager.Instance.SendOnPressRetryCallback(ResetSnake);
-            GetComponent<SpriteRenderer>().color = color;
+            _headSprite = GetComponent<SpriteRenderer>();
+            _headSprite.color = color;
         }
 
         private void Start()
@@ -91,8 +94,9 @@ namespace Snake
             snakePowerUp.ResetPowerUps();
             ResetBodyParts();
             snakeWeight.OnResetSnake();
-            SetUpSpawnTransform();
-            SetUpInitialSize();
+            
+            SetSnakeForSpawn();
+            
             ChangeDirection(BlockManager.Instance.GetLastGeneratedBlockPosition());
             
             if (!isAI) Controls.Enable();
@@ -101,16 +105,18 @@ namespace Snake
         /// <summary>
         /// Set up both position and rotation for the snake that is going to be spawned.
         /// </summary>
-        private void SetUpSpawnTransform()
+        private void SetSnakeForSpawn()
         {
-            Vector3 spawnPoint = GameManager.Instance.GetNextSpawnPoint().position;
-            
+            Vector3 spawnPoint = GameManager.Instance.GetNextSpawnPointPosition();
+
             Directions first = spawnPoint.x > 0 ? Directions.Left : Directions.Right;
             Directions second = spawnPoint.y > 0 ? Directions.Down : Directions.Up;
-            
+
             SetRandomRotation(first, second);
-            
+
             transform.position = spawnPoint;
+            _headSprite.enabled = true;
+            SetUpInitialSize();
         }
 
         /// <summary>
@@ -135,6 +141,7 @@ namespace Snake
             }
             _bodyParts.Clear();
             _bodyParts.Add(transform);
+            _headSprite.enabled = false;
         }
 
         /// <summary>
@@ -179,7 +186,7 @@ namespace Snake
                 if (isAI) TurnAI();
                 if (HasCollided()) yield return null;
                 while (GameManager.Instance.IsGameOver()) yield return null;
-                ChangeSnakePosition();
+                MoveSnakeBody();
                 
                 yield return new WaitForSeconds(snakeWeight.Speed);
                 
@@ -190,7 +197,7 @@ namespace Snake
         /// <summary>
         /// Move the body parts following the snake's head movement.
         /// </summary>
-        private void ChangeSnakePosition()
+        private void MoveSnakeBody()
         {
             for (int i = _bodyParts.Count - 1; i > 0; i--)
             {
@@ -290,12 +297,11 @@ namespace Snake
         
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.CompareTag("Block"))
-            {
-                BlockController blockController = other.GetComponent<BlockController>();
-                if (blockController.Type == PowerUp.EnginePower) snakeWeight.OnPickupEnginePowerBlock();
-                IncreaseSize();
-            }
+            if (!other.CompareTag("Block")) return;
+            
+            BlockController blockController = other.GetComponent<BlockController>();
+            if (blockController.Type == PowerUp.EnginePower) snakeWeight.OnPickupEnginePowerBlock();
+            IncreaseSize();
         }
 
         /// <summary>
@@ -306,10 +312,10 @@ namespace Snake
             snakeWeight.OnPickupAnyBlock();
             Transform reference = _bodyParts[_bodyParts.Count - 1];
         
-            GameObject block = Instantiate(bodyPartPrefab, reference.position - reference.right, reference.rotation);
-            block.GetComponent<SpriteRenderer>().color = color;
-            _bodyParts.Add(block.transform);
-            block.transform.parent = transform.parent;
+            GameObject bodyPart = Instantiate(bodyPartPrefab, reference.position - reference.right, reference.rotation);
+            bodyPart.GetComponent<SpriteRenderer>().color = color;
+            _bodyParts.Add(bodyPart.transform);
+            bodyPart.transform.parent = transform.parent;
         }
 
         /// <summary>

@@ -1,3 +1,5 @@
+# This README may be outdated for this branch.
+***
 # Snake Game
 ## How do I access the game?
 Click [here](https://jasbrela.itch.io/snake-game) to go to the [itch.io](https://itch.io) game's page. It may take up to two minutes to load if it's the first time.

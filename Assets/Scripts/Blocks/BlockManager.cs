@@ -40,6 +40,10 @@ namespace Blocks
             }
         }
         
+        /// <summary>
+        /// Get a random block type.
+        /// </summary>
+        /// <returns>A random block type</returns>
         public PowerUp GetRandomBlockType()
         {
             double rollBuff = Math.Round(Random.Range(0f, 1f), 2);
@@ -52,7 +56,10 @@ namespace Blocks
             return PowerUp.EnginePower;
         }
         
-    
+        /// <summary>
+        /// Get a random position that exists within the bounds.
+        /// </summary>
+        /// <returns>A Vector3 of the random position</returns>
         public Vector3 GetRandomPosition()
         {
             Vector2 bounds = _boundsCollider.size / 2;
@@ -67,16 +74,37 @@ namespace Blocks
             return pos;
         }
 
+        /// <summary>
+        /// Get the last generated block position.
+        /// </summary>
+        /// <returns>A Vector3 of the last position generated</returns>
         public Vector3 GetLastGeneratedBlockPosition()
         {   
             return _lastPosGenerated;
         }
 
-        public void SendOnGeneratedRandomPositionCallback(OnGeneratedRandomPos onGeneratedRandomPos)
+        /// <summary>
+        /// Used to send callbacks to be called when the Block Manager generates a new position.
+        /// </summary>
+        /// <param name="method">A method to be called</param>
+        public void SendOnGeneratedRandomPositionCallback(OnGeneratedRandomPos method)
         {
-            _onGeneratedRandomPos = onGeneratedRandomPos;
+            _onGeneratedRandomPos = method;
         }
 
+        /// <summary>
+        /// Get the bound's collider.
+        /// </summary>
+        /// <returns>A BoxCollider2D of the bounds</returns>
+        public BoxCollider2D GetBoundsCollider()
+        {
+            return _boundsCollider;
+        }
+
+        /// <summary>
+        /// Used to send the BoxCollider2D of the bounds.
+        /// </summary>
+        /// <param name="box">BoxCollider2D of the bounds</param>
         public void SendBoundsCollider(BoxCollider2D box)
         {
             _boundsCollider = box;

@@ -1,3 +1,4 @@
+using System;
 using Enums;
 using UnityEngine;
 
@@ -10,9 +11,13 @@ namespace Blocks
         [SerializeField] private GameObject enginePower;
         public PowerUp Type { get; private set; }
 
-        void Start()
+        private void Awake()
         {
             BlockManager.Instance.SendBoundsCollider(boundsCollider);
+        }
+
+        void Start()
+        {
             SetUpBlock();
         }
 
@@ -66,7 +71,7 @@ namespace Blocks
                 ChangePosition();
             }
         }
-
+        
         /// <summary>
         /// Respawn the block.
         /// </summary>
