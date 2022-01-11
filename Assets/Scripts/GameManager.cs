@@ -5,7 +5,6 @@ public class GameManager : MonoBehaviour
 {
     #region Singleton
     private static GameManager _instance;
-
     public static GameManager Instance
     {
         get
@@ -19,7 +18,6 @@ public class GameManager : MonoBehaviour
         }
     }
     #endregion
-
     #region Callbacks
     public delegate void OnGameStartsForTheFirstTime();
     private OnGameStartsForTheFirstTime _onGameStartsForTheFirstTime;
@@ -36,12 +34,13 @@ public class GameManager : MonoBehaviour
     public delegate void OnTick(int tick);
     private OnTick _onTick;
     #endregion
-
+    #region Variables
     private int _tickCount = 3;
     private int _tickDefaultValue;
     private int _maxSpawnPointIndex;
     private bool _gameOver = true;
     private bool _hasStarted;
+    #endregion
 
     private void Awake()
     {
@@ -161,16 +160,6 @@ public class GameManager : MonoBehaviour
     public bool IsGameOver()
     {
         return _gameOver;
-    }
-    
-    /// <summary>
-    /// Changes the game over to a desired status
-    /// </summary>
-    /// <param name="isOver">Desired status</param>
-    private void ChangeGameOverStatus(bool isOver)
-    {
-        // BUG: Game Over Panel is not does not hide when press retry.
-        _gameOver = isOver;
     }
 
     /// <summary>
