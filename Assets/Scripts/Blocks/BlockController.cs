@@ -14,11 +14,7 @@ namespace Blocks
         private void Awake()
         {
             BlockManager.Instance.SendBoundsCollider(boundsCollider);
-        }
-
-        void Start()
-        {
-            SetUpBlock();
+            GameManager.Instance.SendOnGameStartsCallback(SetUpBlock);
         }
 
         /// <summary>

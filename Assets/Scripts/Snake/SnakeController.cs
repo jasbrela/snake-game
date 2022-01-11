@@ -71,17 +71,22 @@ namespace Snake
 
         private void Start()
         {
+            GameManager.Instance.SendOnGameStartsCallback(StartGame);
+            
             if (!isAI) 
             {
                 SetUpControls();
             }
 
-            if (isAI)
-            {
-                BlockManager.Instance.SendOnGeneratedRandomPositionCallback(ChangeDirection);
-                ChangeDirection(BlockManager.Instance.GetLastGeneratedBlockPosition());
-            }
+            if (!isAI) return;
             
+            BlockManager.Instance.SendOnGeneratedRandomPositionCallback(ChangeDirection);
+            ChangeDirection(BlockManager.Instance.GetLastGeneratedBlockPosition());
+
+        }
+
+        private void StartGame()
+        {
             StartCoroutine(Move());
         }
 
@@ -297,7 +302,7 @@ namespace Snake
         
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (!other.CompareTag("Block")) return;
+            if (!other.CompareTag("Block") || GameManager.Instance.IsGameOver()) return;
             
             BlockController blockController = other.GetComponent<BlockController>();
             if (blockController.Type == PowerUp.EnginePower) snakeWeight.OnPickupEnginePowerBlock();
