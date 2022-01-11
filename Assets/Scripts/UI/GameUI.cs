@@ -1,4 +1,3 @@
-using System.Collections;
 using Enums;
 using TMPro;
 using UnityEngine;
@@ -15,17 +14,25 @@ namespace UI
         private void Awake()
         {
             if (gameOverPanel.activeInHierarchy) gameOverPanel.SetActive(false);
-            GameManager.Instance.SendOnGameOverStatusChangedCallback(OnGameOverStatusChanged);
+            GameManager.Instance.SendOnPressRetryCallback(HideGameOverPanel);
+            GameManager.Instance.SendOnGameOverCallback(ShowGameOverPanel);
             GameManager.Instance.SendOnTickCallback(OnTick);
         }
 
         /// <summary>
-        /// Show or hide the Game Over panel.
+        /// Hide the Game Over panel.
         /// </summary>
-        private void OnGameOverStatusChanged()
+        private void HideGameOverPanel()
         {
-            // TODO: Show Game Over Panel when game starts
-            gameOverPanel.SetActive(GameManager.Instance.IsGameOver());
+            gameOverPanel.SetActive(false);
+        }
+        
+        /// <summary>
+        /// Show the Game Over panel.
+        /// </summary>
+        private void ShowGameOverPanel()
+        {
+            gameOverPanel.SetActive(true);
         }
     
         /// <summary>

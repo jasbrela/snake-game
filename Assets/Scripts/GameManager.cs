@@ -21,14 +21,14 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Callbacks
-    public delegate void OnGameStarts();
-    private OnGameStarts _onGameStarts;
+    public delegate void OnGameStartsForTheFirstTime();
+    private OnGameStartsForTheFirstTime _onGameStartsForTheFirstTime;
     
     public delegate void OnPressRetry();
     private OnPressRetry _onPressRetry;
     
-    public delegate void OnGameOverStatusChanged();
-    private OnGameOverStatusChanged _onGameOverStatusChanged;
+    public delegate void OnGameOver();
+    private OnGameOver _onGameOver;
     
     public delegate Vector3 GetSpawnPoint();
     private GetSpawnPoint _getSpawnPoint;
@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
     private int _tickDefaultValue;
     private int _maxSpawnPointIndex;
     private bool _gameOver = true;
+    private bool _hasStarted;
 
     private void Awake()
     {
@@ -78,8 +79,13 @@ public class GameManager : MonoBehaviour
             _onTick(_tickCount);
         }
 
-        _onGameStarts();
-        ChangeGameOverStatus(false);
+        if (!_hasStarted)
+        {
+            _hasStarted = true;
+            _onGameStartsForTheFirstTime();
+        }
+
+        _gameOver = false;
     }
 
     #region Receive Callbacks
@@ -87,9 +93,9 @@ public class GameManager : MonoBehaviour
     /// Used to send callbacks to be called when the game starts.
     /// </summary>
     /// <param name="method">A void method to be called</param>
-    public void SendOnGameStartsCallback(OnGameStarts method)
+    public void SendOnGameStartsForTheFirstTimeCallback(OnGameStartsForTheFirstTime method)
     {
-        _onGameStarts += method;
+        _onGameStartsForTheFirstTime += method;
     }
     
     /// <summary>
@@ -111,12 +117,12 @@ public class GameManager : MonoBehaviour
     }
         
     /// <summary>
-    /// Used to send callbacks to be called when Player loses or restart game.
+    /// Used to send callbacks to be called when the game is over.
     /// </summary>
     /// <param name="method">A void method to be called</param>
-    public void SendOnGameOverStatusChangedCallback(OnGameOverStatusChanged method)
+    public void SendOnGameOverCallback(OnGameOver method)
     {
-        _onGameOverStatusChanged += method;
+        _onGameOver += method;
     }
 
     /// <summary>
@@ -134,7 +140,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void EndGame()
     {
-        ChangeGameOverStatus(true);
+        _gameOver = true;
+        _onGameOver?.Invoke();
     }
 
     /// <summary>
@@ -164,7 +171,6 @@ public class GameManager : MonoBehaviour
     {
         // BUG: Game Over Panel is not does not hide when press retry.
         _gameOver = isOver;
-        _onGameOverStatusChanged();
     }
 
     /// <summary>

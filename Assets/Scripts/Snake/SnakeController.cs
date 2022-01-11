@@ -71,7 +71,7 @@ namespace Snake
 
         private void Start()
         {
-            GameManager.Instance.SendOnGameStartsCallback(StartGame);
+            GameManager.Instance.SendOnGameStartsForTheFirstTimeCallback(StartGame);
             
             if (!isAI) 
             {
