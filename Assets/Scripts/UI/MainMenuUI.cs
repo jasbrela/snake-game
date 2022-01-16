@@ -19,7 +19,7 @@ namespace UI
         /// </summary>
         public void OnPressMultiplayer()
         {
-            SceneManager.LoadScene(Scenes.MultiplayerGame.ToString());
+            SceneManager.LoadScene(Scenes.Preparation.ToString());
         }
     }
 }

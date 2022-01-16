@@ -1,5 +1,7 @@
 using System.Collections;
+using Enums;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -59,6 +61,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        if (SceneManager.GetActiveScene().name != Scenes.SingleplayerGame.ToString()) return;
+
         Retry();
     }
     

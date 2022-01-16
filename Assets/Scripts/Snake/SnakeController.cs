@@ -4,6 +4,7 @@ using System.Linq;
 using Blocks;
 using Enums;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
 
 namespace Snake
@@ -24,9 +25,6 @@ namespace Snake
         [Tooltip("Mark if it's not AI")]
         [SerializeField] protected bool isAI;
         [SerializeField] private AIHandler aiHandler;
-        
-        [Space(10)][Header("Player Input - Check to use two keys, Uncheck to use four keys")]
-        [SerializeField] private bool isTwoKeysMovement;
 
         [Space(10)] [Header("Essentials")]
         [SerializeField] private BoxCollider2D pointFront;
@@ -34,21 +32,9 @@ namespace Snake
         [SerializeField] private LayerMask obstaclesLayer;
         [Tooltip("This layer will kill the snake instantly")]
         [SerializeField] private LayerMask wallsLayer;
-        
-        // PLAYER
-        private Controls _controls;
-        private Controls Controls
-        {
-            get
-            {
-                if (_controls != null)
-                {
-                    return _controls;
-                }
 
-                return _controls = new Controls();
-            }
-        }
+        // PLAYER
+        private PlayerInput _input;
 
         // AI
         private Vector3 _direction;
@@ -64,6 +50,7 @@ namespace Snake
         
         private void Awake()
         {
+            if (!isAI) _input = GetComponent<PlayerInput>();
             GameManager.Instance.SendOnPressRetryCallback(ResetSnake);
             _headSprite = GetComponent<SpriteRenderer>();
             _headSprite.color = color;
@@ -104,7 +91,7 @@ namespace Snake
             
             ChangeDirection(BlockManager.Instance.GetLastGeneratedBlockPosition());
             
-            if (!isAI) Controls.Enable();
+            if (!isAI) _input.actions.Enable();
         }
 
         /// <summary>
@@ -165,18 +152,8 @@ namespace Snake
         /// </summary>
         private void SetUpControls()
         {
-            if (isTwoKeysMovement)
-            {
-                Controls.Player.TurnLeft.performed += _ => Turn(GetLeftDirection());
-                Controls.Player.TurnRight.performed += _ => Turn(GetRightDirection());
-            }
-            else
-            {
-                Controls.Player.TurnLeft.performed += _ => Turn(Directions.Left);
-                Controls.Player.TurnRight.performed += _ => Turn(Directions.Right);
-                Controls.Player.TurnUp.performed += _ => Turn(Directions.Up);
-                Controls.Player.TurnDown.performed += _ => Turn(Directions.Down);
-            }
+            _input.actions[InputActions.TurnLeft.ToString()].performed += _ => Turn(GetLeftDirection());
+            _input.actions[InputActions.TurnRight.ToString()].performed += _ => Turn(GetRightDirection());
         }
 
         /// <summary>
@@ -297,7 +274,8 @@ namespace Snake
             if (isAI) return;
             
             GameManager.Instance.EndGame();
-            Controls.Disable();
+            _input.actions.Disable();
+            //Controls.Disable();
         }
         
         private void OnTriggerEnter2D(Collider2D other)

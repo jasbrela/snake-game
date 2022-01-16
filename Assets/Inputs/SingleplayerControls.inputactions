@@ -7,11 +7,11 @@
             "actions": [
                 {
                     "name": "TurnLeft",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "5717636d-ba1a-4732-abac-a66629a7ba94",
-                    "expectedControlType": "Vector2",
+                    "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "Press"
                 },
                 {
                     "name": "TurnRight",
@@ -19,23 +19,7 @@
                     "id": "a1f577b5-e3a0-4976-be0a-5931cccffe47",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "TurnUp",
-                    "type": "Button",
-                    "id": "bcd6e778-cd13-4eff-95df-d44143a6e4b5",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "TurnDown",
-                    "type": "Button",
-                    "id": "f3a7f9a4-bfd9-4f97-a1e8-8d6a3fd220b5",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
+                    "interactions": "Press"
                 }
             ],
             "bindings": [
@@ -58,28 +42,6 @@
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "TurnRight",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "55308f77-c794-4763-8a18-9da7b7739203",
-                    "path": "<Keyboard>/w",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "TurnUp",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "5af0b2c0-7529-4f80-a3b2-0f3c2dcbae9b",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "TurnDown",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

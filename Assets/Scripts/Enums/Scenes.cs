@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Enums
 {
     /// <summary>
@@ -9,7 +7,7 @@ namespace Enums
     {
         MainMenu,
         SingleplayerGame,
-        MultiplayerGame
+        Preparation,
         
     }
 }
