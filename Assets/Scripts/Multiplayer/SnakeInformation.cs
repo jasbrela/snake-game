@@ -11,7 +11,7 @@ namespace Multiplayer
         public PlayerInput Input;
         public Color Color;
         public readonly int ID;
-
+        
         public SnakeInformation(int id)
         {
             ID = id;
@@ -21,6 +21,10 @@ namespace Multiplayer
             Color = Color.clear;
         }
 
+        /// <summary>
+        /// Create a link between the manager and this SnakeInformation.
+        /// </summary>
+        /// <param name="manager">a SnakeManager to link</param>
         public void SetManager(SnakeManager manager)
         {
             Manager = manager;

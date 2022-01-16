@@ -25,6 +25,9 @@ namespace Multiplayer
             InputManager.Instance.RebindCanceled -= RemovePlayerFromCancelledRebind;
         }
 
+        /// <summary>
+        /// Add new player.
+        /// </summary>
         public void AddPlayer()
         {
             InputManager.Instance.RebindComplete += StartNextRebind;
@@ -34,6 +37,9 @@ namespace Multiplayer
             CreateCard();
         }
 
+        /// <summary>
+        /// Create the Player's card
+        /// </summary>
         private void CreateCard()
         {
             GameObject card = Instantiate(snakePrefab, transform.position, Quaternion.identity);
@@ -53,11 +59,16 @@ namespace Multiplayer
             InputManager.Instance.StartRebind(_currentInfo.Input, InputActions.TurnLeft.ToString(), 0);
         }
 
+
+        /// <returns>A random color</returns>
         private Color GetRandomColor()
         {
             return Random.ColorHSV(0, 1);
         }
     
+        /// <summary>
+        /// Remove the Player's card when the rebind process is cancelled.
+        /// </summary>
         private void RemovePlayerFromCancelledRebind()
         {
             _snakeInfos[_currentInfo.ID - 1].Input.user.UnpairDevicesAndRemoveUser();
@@ -65,6 +76,10 @@ namespace Multiplayer
             _snakeInfos.RemoveAt(_currentInfo.ID - 1);
         }
     
+        /// <summary>
+        /// Remove the Player's card when the Player press the Close Button.
+        /// </summary>
+        /// <param name="index">Player's index</param>
         private void RemovePlayerFromCard(int index)
         {
             _snakeInfos[index].Input.user.UnpairDevicesAndRemoveUser();
@@ -72,6 +87,9 @@ namespace Multiplayer
             _snakeInfos.RemoveAt(index);
         }
 
+        /// <summary>
+        /// Start the rebinding process for the TurnRight key.
+        /// </summary>
         private void StartNextRebind()
         {
             InputManager.Instance.RebindComplete -= StartNextRebind;
@@ -79,6 +97,9 @@ namespace Multiplayer
             InputManager.Instance.StartRebind(_currentInfo.Input, InputActions.TurnRight.ToString(), 0);
         }
 
+        /// <summary>
+        /// Called when a player is successfully added, after passing on both rebinds.
+        /// </summary>
         private void OnSuccessfullyAddedNewPlayer()
         {
             _currentInfo.Manager.ShowCard();

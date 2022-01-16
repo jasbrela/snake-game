@@ -35,6 +35,7 @@ namespace Snake
 
         // PLAYER
         private PlayerInput _input;
+        private SnakeManager manager;
 
         // AI
         private Vector3 _direction;
@@ -50,6 +51,12 @@ namespace Snake
         
         private void Awake()
         {
+            manager = GetComponent<SnakeManager>();
+            if (manager != null)
+            {
+                color = manager.Info.Color;
+                snakePowerUp.AddInitialPowerUps(manager.currentPreset);
+            }
             if (!isAI) _input = GetComponent<PlayerInput>();
             GameManager.Instance.SendOnPressRetryCallback(ResetSnake);
             _headSprite = GetComponent<SpriteRenderer>();

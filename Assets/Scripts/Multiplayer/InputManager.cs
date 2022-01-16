@@ -46,6 +46,12 @@ namespace Multiplayer
             RebindStarted = null;
         }
 
+        /// <summary>
+        /// Start the rebind process.
+        /// </summary>
+        /// <param name="input">The desired PlayerInput's to rebind.</param>
+        /// <param name="actionName">The desired action's name to rebind.</param>
+        /// <param name="index">The desired binding's index to rebind.</param>
         public void StartRebind(PlayerInput input, string actionName, int index)
         {
             // TODO: Check for duplicates
@@ -71,6 +77,12 @@ namespace Multiplayer
             }
         }
 
+        /// <summary>
+        /// Rebind
+        /// </summary>
+        /// <param name="action">The desired InputAction to rebind.</param>
+        /// <param name="index">The desired binding's index to rebind.</param>
+        /// <param name="allCompositeParts">Should rebind all composite parts?</param>
         private void Rebind(InputAction action, int index, bool allCompositeParts)
         {
             if (action == null || index < 0) return;
@@ -117,6 +129,14 @@ namespace Multiplayer
             rebind.Start();
         }
 
+        /// <summary>
+        /// Get the binding name.
+        /// </summary>
+        /// <param name="input">The binding's PlayerInput</param>
+        /// <param name="actionName">The binding's action</param>
+        /// <param name="index">The binding's index</param>
+        /// <param name="options">Desired DisplayStringOptions</param>
+        /// <returns></returns>
         public string GetBindingName(PlayerInput input, string actionName, int index, InputBinding.DisplayStringOptions options)
         {
             InputAction action = input.actions.FindAction(actionName);

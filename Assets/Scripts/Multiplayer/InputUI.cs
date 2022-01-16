@@ -32,6 +32,9 @@ namespace Multiplayer
             InputManager.Instance.RebindComplete -= UpdateUI;
         }
 
+        /// <summary>
+        /// Get the binding's information based on selectedBinding.
+        /// </summary>
         private void GetBindingInfo()
         {
             _actionName = inputActionReference.action.name;
@@ -41,6 +44,9 @@ namespace Multiplayer
         }
 
 
+        /// <summary>
+        /// Updates the UI with the binding's information.
+        /// </summary>
         private void UpdateUI()
         {
             if (inputActionReference == null) return;

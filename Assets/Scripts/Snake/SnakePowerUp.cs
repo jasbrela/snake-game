@@ -1,5 +1,6 @@
 using Blocks;
 using Enums;
+using Multiplayer;
 using UnityEngine;
 
 namespace Snake
@@ -20,16 +21,6 @@ namespace Snake
             _batteringRamQuantity = 0;
         }
 
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            if (!other.CompareTag("Block") || GameManager.Instance.IsGameOver()) return;
-            
-            BlockController blockController = other.GetComponent<BlockController>();
-
-            AddPowerUp(blockController.Type);
-            blockController.Respawn();
-        }
-    
         /// <summary>
         /// Add one to the power-ups type quantity and show the Battering Ram sprite if necessary.
         /// </summary>
@@ -60,6 +51,33 @@ namespace Snake
             _batteringRamQuantity--;
             if (batteringRam.activeSelf && _batteringRamQuantity == 0) batteringRam.SetActive(false);
             return true;
+        }
+
+        /// <summary>
+        /// Add initial power-ups, based on the chosen preset.
+        /// </summary>
+        /// <param name="preset">Player's chosen preset</param>
+        public void AddInitialPowerUps(SnakePreset preset)
+        {
+            for (int i = 0; i < preset.batteringRamQuantity; i++)
+            {
+                AddPowerUp(PowerUp.BatteringRam);
+            }
+            
+            for (int i = 0; i < preset.enginePowerQuantity; i++)
+            {
+                AddPowerUp(PowerUp.EnginePower);
+            }
+        }
+        
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (!other.CompareTag("Block") || GameManager.Instance.IsGameOver()) return;
+            
+            BlockController blockController = other.GetComponent<BlockController>();
+
+            AddPowerUp(blockController.Type);
+            blockController.Respawn();
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Snake
         [SerializeField] private Image snakeHead;
         [SerializeField] private TextMeshProUGUI nickname;
         [SerializeField] private TextMeshProUGUI batteringRamQuantity;
-        [SerializeField] private TextMeshProUGUI powerEngineQuantity;
+        [SerializeField] private TextMeshProUGUI enginePowerQuantity;
         
         [SerializeField] private PresetsList allPresets;
         
@@ -28,12 +28,18 @@ namespace Snake
         [HideInInspector] public SnakePreset currentPreset;
         public SnakeInformation Info { get; set; }
         
+        /// <summary>
+        /// Set up the controls for human players.
+        /// </summary>
         private void SetUpControls()
         {
             Info.Input.actions[InputActions.TurnLeft.ToString()].performed += _ => OnClickLeft();
             Info.Input.actions[InputActions.TurnRight.ToString()].performed += _ => OnClickRight();
         }
 
+        /// <summary>
+        /// Hide snake's head and show card. Used in Multiplayer Preparation.
+        /// </summary>
         public void ShowCard()
         {
             currentPreset = allPresets.snakePresets[0];
@@ -47,6 +53,9 @@ namespace Snake
             Debug.Log(Info.Input.actions.enabled);
         }
 
+        /// <summary>
+        /// Update Card's info.
+        /// </summary>
         private void UpdateCard()
         {
             UpdatePreset();
@@ -55,12 +64,18 @@ namespace Snake
             snakeHead.color = Info.Color;
         }
         
+        /// <summary>
+        /// Update Snake Preset's values.
+        /// </summary>
         private void UpdatePreset()
         {
             batteringRamQuantity.text = $"x{currentPreset.batteringRamQuantity}";
-            powerEngineQuantity.text = $"x{currentPreset.powerEngineQuantity}";
+            enginePowerQuantity.text = $"x{currentPreset.enginePowerQuantity}";
         }
 
+        /// <summary>
+        /// Hide the card and show head.
+        /// </summary>
         public void ShowHead()
         {
             Info.Input.actions.Disable();
@@ -69,17 +84,27 @@ namespace Snake
             headSprite.enabled = true;
         }
         
-        public void DeleteCard()
+        /// <summary>
+        /// Remove the player.
+        /// </summary>
+        public void RemovePlayer()
         {
             OnClickDelete?.Invoke(Info.ID - 1);
             Destroy(gameObject);
         }
 
+        /// <summary>
+        /// Get this Snake's head.
+        /// </summary>
+        /// <returns>A GameObject of a Snake's Head</returns>
         public GameObject GetHead()
         {
             return head;
         }
 
+        /// <summary>
+        /// Change the Current Preset to the previous one. If it's the first, then change to the last preset available.
+        /// </summary>
         private void OnClickRight()
         {
             index++;
@@ -89,6 +114,9 @@ namespace Snake
             UpdatePreset();
         }
 
+        /// <summary>
+        /// Change the Current Preset to the next one. If it's the last, then change to thr first preset available.
+        /// </summary>
         private void OnClickLeft()
         {
             index--;

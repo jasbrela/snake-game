@@ -6,6 +6,6 @@ namespace Multiplayer
     public class SnakePreset : ScriptableObject
     {
         public int batteringRamQuantity;
-        public int powerEngineQuantity;
+        public int enginePowerQuantity;
     }
 }
