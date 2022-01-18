@@ -12,9 +12,11 @@ namespace Multiplayer
         [SerializeField] private GameObject snakePrefab;
         [SerializeField] private Transform cardsParent;
         [SerializeField] private Transform newCard;
-    
+        [SerializeField] private InputAction excludeBindings;
+        
         private readonly List<SnakeInformation> _snakeInfos = new List<SnakeInformation>();
         private SnakeInformation _currentInfo;
+        
         private void OnEnable()
         {
             InputManager.Instance.RebindCanceled += RemovePlayerFromCancelledRebind;
@@ -56,14 +58,15 @@ namespace Multiplayer
 
             _snakeInfos.Add(_currentInfo);
         
-            InputManager.Instance.StartRebind(_currentInfo.Input, InputActions.TurnLeft.ToString(), 0);
+            InputManager.Instance.StartRebind(_currentInfo.Input, InputActions.TurnLeft.ToString(),
+                0, excludeBindings);
         }
-
-
+        
+        /// <summary>Get a random vivid color</summary>
         /// <returns>A random color</returns>
         private Color GetRandomColor()
         {
-            return Random.ColorHSV(0, 1);
+            return Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f);
         }
     
         /// <summary>
@@ -77,14 +80,28 @@ namespace Multiplayer
         }
     
         /// <summary>
-        /// Remove the Player's card when the Player press the Close Button.
+        /// Remove the Player's card when the Player press the Close Button and updates the other cards.
         /// </summary>
         /// <param name="index">Player's index</param>
         private void RemovePlayerFromCard(int index)
         {
+            foreach (InputAction action in _snakeInfos[index].Input.actions)
+            {
+                foreach (InputBinding binding in action.bindings)
+                {
+                    InputManager.Instance.MakeBindingAvailable(binding);
+                }
+            }
+
+            for (int i = index; i < _snakeInfos.Count; i++)
+            {
+                _snakeInfos[i].Manager.UpdateID(i);
+            }
+            
             _snakeInfos[index].Input.user.UnpairDevicesAndRemoveUser();
             Destroy(_snakeInfos[index].Card);
-            _snakeInfos.RemoveAt(index);
+            _snakeInfos.Remove(_snakeInfos[index]);
+            
         }
 
         /// <summary>
@@ -94,7 +111,8 @@ namespace Multiplayer
         {
             InputManager.Instance.RebindComplete -= StartNextRebind;
             InputManager.Instance.RebindComplete += OnSuccessfullyAddedNewPlayer;
-            InputManager.Instance.StartRebind(_currentInfo.Input, InputActions.TurnRight.ToString(), 0);
+            InputManager.Instance.StartRebind(_currentInfo.Input, InputActions.TurnRight.ToString(),
+                0, excludeBindings);
         }
 
         /// <summary>

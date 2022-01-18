@@ -10,7 +10,7 @@ namespace Multiplayer
         public SnakeManager Manager;
         public PlayerInput Input;
         public Color Color;
-        public readonly int ID;
+        public int ID;
         
         public SnakeInformation(int id)
         {

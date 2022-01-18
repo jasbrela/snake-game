@@ -484,6 +484,262 @@ MonoBehaviour:
   snakePrefab: {fileID: 7535217261492618183, guid: c8b691b2ba9f2e944a1e42693778105b, type: 3}
   cardsParent: {fileID: 414073514}
   newCard: {fileID: 4030018491756969204}
+  excludeBindings:
+    m_Name: Exclude Bindings
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: a3de48cc-99d1-4219-bea4-a0e1236aafca
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 04488dcf-1dbc-47c7-a8c9-7d24acd76a62
+      m_Path: <Mouse>
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 53a0d0a4-53e6-4d27-8e68-bef17af3b8be
+      m_Path: <Keyboard>/anyKey
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 0c4ca157-7e78-434b-b5e5-6263661a4c00
+      m_Path: <Keyboard>/enter
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 9fef3646-d5ae-45a1-9d76-a761dff4f0da
+      m_Path: <Keyboard>/contextMenu
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 1400744a-a89b-48f7-a70c-4a806135a8ae
+      m_Path: <Keyboard>/alt
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: e23de02f-1de9-44d1-91ba-848e0108195c
+      m_Path: <Keyboard>/rightAlt
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: a1541bdb-47b5-4057-a0a8-5a1d291c5108
+      m_Path: <Keyboard>/leftAlt
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: b68b3c13-865a-4609-b133-94ef1b6a8f6d
+      m_Path: <Keyboard>/ctrl
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 882660c5-a421-4a7b-9016-f27122fce932
+      m_Path: <Keyboard>/rightCtrl
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: a54ab4e0-6de3-472a-a992-d4a969c26b65
+      m_Path: <Keyboard>/leftCtrl
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 8fa2da53-76b1-4a42-896d-7968dd96b291
+      m_Path: <Keyboard>/shift
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 9f0d8dbc-efe9-40d0-b59b-606455d5500a
+      m_Path: <Keyboard>/rightShift
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: d4676a3d-4674-40ed-80cf-b58c3dddcd99
+      m_Path: <Keyboard>/leftShift
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 581884a4-3ae0-439e-a2e1-b085447389af
+      m_Path: <Keyboard>/slash
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 5b208a0c-5601-403c-934a-c3ef825f2cfd
+      m_Path: <Keyboard>/backslash
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 37b3de3c-a88f-4150-9b17-9d99496c1570
+      m_Path: <Keyboard>/space
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 77143a8f-5088-4ff5-b0d8-eae86be97ec4
+      m_Path: <Keyboard>/backspace
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 9d14785b-b77c-4dd1-9306-f9f0400f3457
+      m_Path: <Keyboard>/capsLock
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: b32ea5a3-5a72-486b-b43f-dc53b395138d
+      m_Path: <Keyboard>/tab
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 7f847b03-60b3-4b8a-88c3-b4e33a142840
+      m_Path: <Keyboard>/backquote
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 269e2cc6-6ae0-4415-9986-8a3fe3c0eea5
+      m_Path: <Keyboard>/escape
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 88f04e8b-beca-40cf-bab3-56dee629b2b8
+      m_Path: <Keyboard>/comma
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 44ae340b-cf29-412b-8fd0-d1006e5949d5
+      m_Path: <Keyboard>/period
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 3100d385-3f4d-442a-a7c0-ca454960bb70
+      m_Path: <Keyboard>/semicolon
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: f517a5ce-c34e-4ed2-b0b0-22014798c7cf
+      m_Path: <Keyboard>/leftBracket
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 354dedf3-ba76-4ab2-97ad-6128b82ee210
+      m_Path: <Keyboard>/rightBracket
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 4614f773-5c9d-4dbf-b5ad-35145aa5012f
+      m_Path: <Keyboard>/minus
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 44de2ed8-a6e8-4ac3-b8e6-1c53f4483cfb
+      m_Path: <Keyboard>/equals
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 3da429e0-5d4f-416f-9e38-9cdd87fd54ae
+      m_Path: <Keyboard>/quote
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: a814ed28-3b07-47f7-ab7c-94192bfc213b
+      m_Path: <Keyboard>/leftMeta
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 9eac1c74-177e-4635-ac6f-2b45c01a8756
+      m_Path: <Keyboard>/rightMeta
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Exclude Bindings
+      m_Flags: 0
 --- !u!4 &1364509337
 Transform:
   m_ObjectHideFlags: 0

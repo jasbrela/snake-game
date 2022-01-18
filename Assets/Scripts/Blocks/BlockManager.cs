@@ -104,7 +104,7 @@ namespace Blocks
         /// <summary>
         /// Used to send the BoxCollider2D of the bounds.
         /// </summary>
-        /// <param name="box">BoxCollider2D of the bounds</param>
+        /// <param name="box">A BoxCollider2D of the bounds</param>
         public void SendBoundsCollider(BoxCollider2D box)
         {
             _boundsCollider = box;

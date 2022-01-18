@@ -38,6 +38,16 @@ namespace Snake
         }
 
         /// <summary>
+        /// Used to change the player's ID.
+        /// </summary>
+        /// <param name="newID">The new ID.</param>
+        public void UpdateID(int newID)
+        {
+            Info.ID = newID;
+            UpdateCard();
+        }
+        
+        /// <summary>
         /// Hide snake's head and show card. Used in Multiplayer Preparation.
         /// </summary>
         public void ShowCard()
@@ -49,8 +59,6 @@ namespace Snake
             
             SetUpControls();
             Info.Input.actions.Enable();
-
-            Debug.Log(Info.Input.actions.enabled);
         }
 
         /// <summary>
@@ -65,7 +73,7 @@ namespace Snake
         }
         
         /// <summary>
-        /// Update Snake Preset's values.
+        /// Update with current preset values.
         /// </summary>
         private void UpdatePreset()
         {
