@@ -766,7 +766,7 @@ MonoBehaviour:
   snakeHead: {fileID: 2975400891768096694}
   nickname: {fileID: 2927590571561865981}
   batteringRamQuantity: {fileID: 1678114406080976679}
-  powerEngineQuantity: {fileID: 7939593583816639265}
+  enginePowerQuantity: {fileID: 7939593583816639265}
   allPresets: {fileID: 11400000, guid: bc4aa3f8bff3dfc418c204c7c1d44518, type: 2}
   headSprite: {fileID: 6985367798202801376}
   head: {fileID: 6985367798202801379}
@@ -836,7 +836,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: A
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1064,7 +1064,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: A
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

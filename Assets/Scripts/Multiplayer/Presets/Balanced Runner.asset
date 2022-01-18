@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Balanced Runner
   m_EditorClassIdentifier: 
   batteringRamQuantity: 1
-  powerEngineQuantity: 2
+  enginePowerQuantity: 2

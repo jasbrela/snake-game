@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Balanced Tank
   m_EditorClassIdentifier: 
   batteringRamQuantity: 2
-  powerEngineQuantity: 1
+  enginePowerQuantity: 1
