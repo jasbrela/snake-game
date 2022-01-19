@@ -11,4 +11,19 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SingleplayerGame.unity
     guid: de57732ca6877f245a1f0c57f99522bc
+  - enabled: 1
+    path: Assets/Scenes/Preparation.unity
+    guid: 7b7650f508fa4ab409e6b2332429c67e
+  - enabled: 1
+    path: Assets/Scenes/MultiplayerGameSmall.unity
+    guid: 31a4a8b610bd4fb42b0821e43f59ba91
+  - enabled: 1
+    path: Assets/Scenes/MultiplayerGameMedium.unity
+    guid: 056b54e308c746746aab9e9b4d8692b4
+  - enabled: 1
+    path: Assets/Scenes/MultiplayerGameLarge.unity
+    guid: a5dd9a629459e0947b0dedd0f0a84d22
+  - enabled: 1
+    path: Assets/Scenes/MultiplayerGameExtraLarge.unity
+    guid: ae5128ec8dd856844aa4dff6d1e15eea
   m_configObjects: {}

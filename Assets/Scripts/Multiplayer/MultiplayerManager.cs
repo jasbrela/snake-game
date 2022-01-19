@@ -17,6 +17,7 @@ namespace Multiplayer
         
         [Header("Cards Information")]
         [SerializeField] private GameObject playerPrefab;
+        [SerializeField] private GameObject AIPrefab;
         [SerializeField] private Transform cardsParent;
         [SerializeField] private Transform newCard;
         [SerializeField] private Button newCardButton;
@@ -33,11 +34,13 @@ namespace Multiplayer
 
         private void OnEnable() => ListenToEvents();
         private void OnDisable() => StopListeningToEvents();
+        private void Awake() => DontDestroyOnLoad(this);
+        
 
-        private void Awake()
+        private void Start()
         {
-            DontDestroyOnLoad(this);
-            }
+            GameManager.SetMultiplayerGame();
+        }
 
         /// <summary>
         /// Listen to events
@@ -122,6 +125,7 @@ namespace Multiplayer
             _snakeInfos[_currentInfo.ID - 1].Input.user.UnpairDevicesAndRemoveUser();
             Destroy(_snakeInfos[_currentInfo.ID - 1].Card);
             _snakeInfos.RemoveAt(_currentInfo.ID - 1);
+            if (newCardButton.interactable == false && _snakeInfos.Count < 12) newCardButton.interactable = true;
         }
     
         /// <summary>
@@ -149,7 +153,27 @@ namespace Multiplayer
             _snakeInfos[index].Input.user.UnpairDevicesAndRemoveUser();
             Destroy(_snakeInfos[index].Card);
             _snakeInfos.Remove(_snakeInfos[index]);
+            if (newCardButton.interactable == false && _snakeInfos.Count < 12) newCardButton.interactable = true;
+        }
+        /// <summary>
+        /// Removes the player after his snake dies.
+        /// </summary>
+        /// <param name="manager">The player's snake's Snake Manager.</param>
+        private void RemovePlayerFromDeath(SnakeManager manager)
+        {
+            // TODO: Add game over
             
+            _snakeInfos[manager.Info.ID - 1].Input.user.UnpairDevicesAndRemoveUser();
+            Destroy(_snakeInfos[manager.Info.ID - 1].Card);
+        }
+        
+        /// <summary>
+        /// Destroy the AI snake when it dies.
+        /// </summary>
+        /// <param name="parent">The AI snake's parent</param>
+        private void RemoveAIFromDeath(GameObject parent)
+        {
+            Destroy(parent);
         }
 
         /// <summary>
@@ -177,6 +201,8 @@ namespace Multiplayer
             
             _currentInfo.Manager.ShowCard();
             newCard.SetAsLastSibling();
+
+            if (_snakeInfos.Count == 12) newCardButton.interactable = false;
         }
 
         /// <summary>
@@ -184,21 +210,84 @@ namespace Multiplayer
         /// </summary>
         public void OnClickStart()
         {
+            StopListeningToEvents();
+            SceneManager.sceneLoaded += SetUpSnakes;
+
             if (_snakeInfos.Count < minimumPlayers)
             {
                 popup.ShowNotEnoughPlayersMessage(minimumPlayers);
                 return;
             }
             
-            // TODO: Prepare the snakes to start the game.
-            
             foreach (SnakeInformation snake in _snakeInfos)
             {
                 snake.Card.transform.SetParent(transform);
+                snake.Card.transform.position = Vector3.zero;
+                snake.Card.name = $"P{snake.ID}";
                 snake.Manager.ShowHead();
             }
             
-            //SceneManager.LoadScene(Scenes.MultiplayerGame.ToString());
+            LoadMap();
+        }
+
+        /// <summary>
+        /// Loads the correct map, based on the player's quantity.
+        /// </summary>
+        private void LoadMap()
+        {
+            if (_snakeInfos.Count <= 3)
+            {
+                SceneManager.LoadScene(Scenes.MultiplayerGameSmall.ToString());
+            }
+            else if (_snakeInfos.Count <= 6)
+            {
+                SceneManager.LoadScene(Scenes.MultiplayerGameMedium.ToString());
+            }
+            else if (_snakeInfos.Count <= 9)
+            {
+                SceneManager.LoadScene(Scenes.MultiplayerGameLarge.ToString());
+            }
+            else if (_snakeInfos.Count <= 12)
+            {
+                SceneManager.LoadScene(Scenes.MultiplayerGameExtraLarge.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Set up the snakes on load map.
+        /// </summary>
+        private void SetUpSnakes(Scene scene, LoadSceneMode mode)
+        {
+            SceneManager.sceneLoaded -= SetUpSnakes;
+            
+            if (!scene.name.Contains("Multiplayer")) return;
+            
+            foreach (SnakeInformation snake in _snakeInfos)
+            {
+                GameObject ai = Instantiate(AIPrefab, transform);
+                SnakeController aiController = ai.GetComponentInChildren<SnakeController>();
+                aiController.SetColor(GetAIColor(snake.Color));
+                aiController.SendOnAISnakeDieCallback(RemoveAIFromDeath);
+                
+                snake.Manager.EnableSnakeController();
+                snake.Manager.GetSnakeController().SendOnPlayerSnakeDieCallback(RemovePlayerFromDeath);
+                snake.Manager.GetSnakeController().SetColor(snake.Color);
+                snake.Manager.GetSnakeController().ResetSnake();
+            }
+
+            GameManager.Instance.Retry();
+        }
+
+        /// <summary>
+        /// Get a color for the AI snake. It's a lighter version of the player's snake.
+        /// </summary>
+        /// <param name="color">Player snake's color</param>
+        /// <returns>A lighter color.</returns>
+        private Color GetAIColor(Color color)
+        {
+            Color.RGBToHSV(color, out float h, out float s, out float v);
+            s = .25f;
+            return Color.HSVToRGB(h, s, v);
         }
     }
 }

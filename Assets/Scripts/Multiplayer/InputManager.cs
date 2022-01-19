@@ -15,11 +15,10 @@ namespace Multiplayer
         {
             get
             {
-                if (_instance == null)
-                {
-                    GameObject go = new GameObject("Input Manager");
-                    go.AddComponent<InputManager>();
-                }
+                if (_instance != null) return _instance;
+                
+                GameObject go = new GameObject("Input Manager");
+                go.AddComponent<InputManager>();
                 return _instance;
             }
         }
@@ -94,8 +93,6 @@ namespace Multiplayer
         {
             if (action == null || index < 0) return;
             
-            Debug.Log($"Press a {action.expectedControlType} key");
-        
             action.Disable();
             InputSystem.EnableDevice(Mouse.current);
             
@@ -134,7 +131,14 @@ namespace Multiplayer
             operation.OnCancel(op =>
             {
                 Debug.Log("Canceled");
-                // BUG: Finishing one time after canceling is not enabling action again.
+                // BUG: After canceling, a non-existent duplicate is being detected
+                //  1. Add a new player. There can be or not be more players, but I do recommend to have none.
+                //  2. Press backspace to cancel.
+                //  3. Add new player, again. Press one key, then another one. A duplicate will be detected
+                // for the second one, but no popup will be shown.
+                //  4. Press another key. The second key will be replaced, the UI updated and the game will
+                // go back to normal.
+                
                 action.Enable();
                 op.Dispose();
             

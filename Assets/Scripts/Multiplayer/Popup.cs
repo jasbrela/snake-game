@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using Enums;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Popup : MonoBehaviour
 {

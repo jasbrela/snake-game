@@ -47,38 +47,75 @@ namespace Snake
         private bool _canTurn = true;
         private bool _canTurnDrastically;
         private bool _collided;
-        #endregion
         
-        private void Awake()
+        public delegate void OnPlayerSnakeDie(SnakeManager manager);
+        private OnPlayerSnakeDie onPlayerSnakeDieCallback;
+        
+        public delegate void OnAISnakeDie(GameObject parent);
+        private OnAISnakeDie onAISnakeDieCallback;
+        #endregion
+
+        /// <summary>
+        /// Used to send the callback to be called when the player dies.
+        /// </summary>
+        /// <param name="onPlayerSnakeDie">A void method to be called.</param>
+        public void SendOnPlayerSnakeDieCallback(OnPlayerSnakeDie onPlayerSnakeDie)
         {
-            manager = GetComponent<SnakeManager>();
-            if (manager != null)
-            {
-                color = manager.Info.Color;
-                snakePowerUp.AddInitialPowerUps(manager.currentPreset);
-            }
+            if (!isAI) onPlayerSnakeDieCallback = onPlayerSnakeDie;
+        }
+        
+        /// <summary>
+        /// Used to send the callback to be called when the AI dies.
+        /// </summary>
+        /// <param name="onAISnakeDie">A void method to be called.</param>
+        public void SendOnAISnakeDieCallback(OnAISnakeDie onAISnakeDie)
+        {
+            if (isAI) onAISnakeDieCallback = onAISnakeDie;
+        }
+        
+        /// <summary>
+        /// Sets the snake's color
+        /// </summary>
+        /// <param name="color">A color to be the snake's color.</param>
+        public void SetColor(Color color)
+        {
+            this.color = color;
+            _headSprite.color = color;
+        }
+        
+        private void OnEnable()
+        {
             if (!isAI) _input = GetComponent<PlayerInput>();
             GameManager.Instance.SendOnPressRetryCallback(ResetSnake);
             _headSprite = GetComponent<SpriteRenderer>();
-            _headSprite.color = color;
-        }
-
-        private void Start()
-        {
+            
             GameManager.Instance.SendOnGameStartsForTheFirstTimeCallback(StartGame);
             
-            if (!isAI) 
+            if (!isAI)
             {
                 SetUpControls();
             }
 
-            if (!isAI) return;
+            if (GameManager.IsAMultiplayerGame() && !isAI)
+            {
+                manager = transform.parent.GetComponent<SnakeManager>();
+                color = manager.Info.Color;
+            }
             
+            if (!isAI) return;
             BlockManager.Instance.SendOnGeneratedRandomPositionCallback(ChangeDirection);
             ChangeDirection(BlockManager.Instance.GetLastGeneratedBlockPosition());
-
+            
         }
 
+        private void Start()
+        {
+            _headSprite.color = color;
+        }
+
+        /// <summary>
+        /// On game starts, start the Move Coroutine
+        /// </summary>
         private void StartGame()
         {
             StartCoroutine(Move());
@@ -87,7 +124,7 @@ namespace Snake
         /// <summary>
         /// Prepares the snake to spawn again.
         /// </summary>
-        private void ResetSnake()
+        public void ResetSnake()
         {
             _canTurnDrastically = true;
             snakePowerUp.ResetPowerUps();
@@ -96,6 +133,11 @@ namespace Snake
             
             SetSnakeForSpawn();
             
+            if (GameManager.IsAMultiplayerGame() && !isAI)
+            {
+                snakePowerUp.AddInitialPowerUps(manager.currentPreset);
+            }
+
             ChangeDirection(BlockManager.Instance.GetLastGeneratedBlockPosition());
             
             if (!isAI) _input.actions.Enable();
@@ -107,11 +149,19 @@ namespace Snake
         private void SetSnakeForSpawn()
         {
             Vector3 spawnPoint = GameManager.Instance.GetNextSpawnPointPosition();
+            
+            if (GameManager.IsAMultiplayerGame())
+            {
+                _canTurn = true;
+                Turn(spawnPoint.x > 0 ? Directions.Left : Directions.Right);
+            }
+            else
+            {
+                Directions first = spawnPoint.x > 0 ? Directions.Left : Directions.Right;
+                Directions second = spawnPoint.y > 0 ? Directions.Down : Directions.Up;
 
-            Directions first = spawnPoint.x > 0 ? Directions.Left : Directions.Right;
-            Directions second = spawnPoint.y > 0 ? Directions.Down : Directions.Up;
-
-            SetRandomRotation(first, second);
+                SetRandomRotation(first, second);
+            }
 
             transform.position = spawnPoint;
             _headSprite.enabled = true;
@@ -170,8 +220,8 @@ namespace Snake
         {
             while (true)
             {
-                // BUG: AI is dying as soon as it touches wall without any chance to turn.
-                
+                // BUG: AI is dying as soon as it touches wall directly without any chance to turn.
+
                 if (isAI) TurnAI();
                 if (HasCollided()) yield return null;
                 while (GameManager.Instance.IsGameOver()) yield return null;
@@ -236,8 +286,6 @@ namespace Snake
             if (_canTurnDrastically) _canTurnDrastically = false;
         
             transform.rotation = Quaternion.Euler(0, 0, z);
-            
-            HasCollided();
         }
         
         /// <summary>
@@ -262,6 +310,19 @@ namespace Snake
                 }
             }
 
+            if (GameManager.IsAMultiplayerGame())
+            {
+                if (isAI)
+                {
+                    onAISnakeDieCallback?.Invoke(transform.parent.gameObject);
+                }
+                else
+                {
+                    onPlayerSnakeDieCallback?.Invoke(manager);
+                }
+                return true;
+            }
+
             if (isAI)
             {
                 ResetSnake();
@@ -277,12 +338,10 @@ namespace Snake
         /// </summary>
         private void GameOver()
         {
-            // TODO: In case of local multiplayer, this must be changed.
             if (isAI) return;
             
             GameManager.Instance.EndGame();
             _input.actions.Disable();
-            //Controls.Disable();
         }
         
         private void OnTriggerEnter2D(Collider2D other)

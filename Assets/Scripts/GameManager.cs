@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
     private int _maxSpawnPointIndex;
     private bool _gameOver = true;
     private bool _hasStarted;
+    private static bool _isMultiplayer;
     #endregion
 
     private void Awake()
@@ -172,5 +173,19 @@ public class GameManager : MonoBehaviour
     public Vector3 GetNextSpawnPointPosition()
     {
         return _getSpawnPoint();
+    }
+
+    /// <summary>
+    /// Set isMultiplayer to true.
+    /// </summary>
+    public static void SetMultiplayerGame()
+    {
+        _isMultiplayer = true;
+    }
+    
+    /// <returns>Is this a multiplayer game?</returns>
+    public static bool IsAMultiplayerGame()
+    {
+        return _isMultiplayer;
     }
 }

@@ -16,10 +16,10 @@ namespace Snake
         [SerializeField] private TextMeshProUGUI nickname;
         [SerializeField] private TextMeshProUGUI batteringRamQuantity;
         [SerializeField] private TextMeshProUGUI enginePowerQuantity;
-        
         [SerializeField] private PresetsList allPresets;
-        
+
         [Header("Snake's Head")]
+        [SerializeField] private SnakeController controller;
         [SerializeField] private SpriteRenderer headSprite;
         [SerializeField] private GameObject head;
 
@@ -87,7 +87,7 @@ namespace Snake
         /// </summary>
         public void ShowHead()
         {
-            Info.Input.actions.Disable();
+            //Info.Input.actions.Disable();
             
             card.SetActive(false);
             headSprite.enabled = true;
@@ -110,12 +110,32 @@ namespace Snake
         {
             return head;
         }
+        
+        /// <summary>
+        /// Get this Snake's SnakeController.
+        /// </summary>
+        /// <returns>This Snake's SnakeController</returns>
+        public ref SnakeController GetSnakeController()
+        {
+            return ref controller;
+        }
+        
+        /// <summary>
+        /// Get this Snake's SnakeController.
+        /// </summary>
+        /// <returns>This Snake's SnakeController</returns>
+        public void EnableSnakeController()
+        {
+            controller.enabled = true;
+        }
 
         /// <summary>
         /// Change the Current Preset to the previous one. If it's the first, then change to the last preset available.
         /// </summary>
         private void OnClickRight()
         {
+            if (SceneManager.GetActiveScene().name != Scenes.Preparation.ToString()) return;
+
             index++;
             if (index >= allPresets.snakePresets.Length - 1) index = 0;
             currentPreset = allPresets.snakePresets[index];

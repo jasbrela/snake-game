@@ -18,9 +18,7 @@ namespace Multiplayer
 
         private string _actionName;
         private int _bindingIndex;
-
-        private void OnValidate() => UpdateUI();
-
+        
         private void OnEnable()
         {
             InputManager.Instance.RebindComplete += UpdateUI;

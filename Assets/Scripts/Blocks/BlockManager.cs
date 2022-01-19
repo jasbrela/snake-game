@@ -89,7 +89,7 @@ namespace Blocks
         /// <param name="method">A method to be called</param>
         public void SendOnGeneratedRandomPositionCallback(OnGeneratedRandomPos method)
         {
-            _onGeneratedRandomPos = method;
+            _onGeneratedRandomPos += method;
         }
 
         /// <summary>
