@@ -152,7 +152,6 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void Retry()
     {
-        // BUG: Snake is getting faster and faster on press retry.
         _tickCount = _tickDefaultValue;
         StartCoroutine(StartGame());
     }

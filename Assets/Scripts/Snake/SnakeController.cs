@@ -21,12 +21,12 @@ namespace Snake
         [SerializeField] private SnakePowerUp snakePowerUp;
         [SerializeField] private int initialSnakeSize;
 
-        [Space(10)][Header("AI Information - AIHandler can be null if it's not AI")]
+        [Header("AI Information - AIHandler can be null if it's not AI")]
         [Tooltip("Mark if it's not AI")]
         [SerializeField] protected bool isAI;
         [SerializeField] private AIHandler aiHandler;
 
-        [Space(10)] [Header("Essentials")]
+        [Header("Essentials")]
         [SerializeField] private BoxCollider2D pointFront;
         [Tooltip("This layer allow the snake to use its battering ram blocks before dying")]
         [SerializeField] private LayerMask obstaclesLayer;

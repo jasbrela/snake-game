@@ -8,7 +8,7 @@ public class SpawnPointHandler : MonoBehaviour
     [Tooltip("Check for ordered spawn, uncheck for random spawn.")]
     [SerializeField] private bool doesTheOrderMatters;
     
-    [Space(10)][Header("Spawn Points Lists")]
+    [Header("Spawn Points Lists")]
     [SerializeField] private Transform[] leftSpawnPoints;
     [SerializeField] private Transform[] rightSpawnPoints;
 

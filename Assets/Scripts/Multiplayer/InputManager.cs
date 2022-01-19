@@ -39,9 +39,10 @@ namespace Multiplayer
 
         public event Action RebindComplete;
         public event Action RebindCanceled;
-        public event Action OnDuplicateFound;
+        public event Action<string> OnDuplicateFound;
         public event Action<InputAction, int> RebindStarted;
-        
+
+        private InputActionRebindingExtensions.RebindingOperation operation;
         private readonly List<InputBinding> unavailableKeys = new List<InputBinding>();
 
         private void OnDestroy()
@@ -59,11 +60,8 @@ namespace Multiplayer
         /// <param name="actionName">The desired action's name to rebind.</param>
         /// <param name="index">The desired binding's index to rebind.</param>
         /// <param name="excludeBindings">A InputAction containing all the bindings to exclude.</param>
-
         public void StartRebind(PlayerInput input, string actionName, int index, [CanBeNull] InputAction excludeBindings)
         {
-            // TODO: Check for duplicates
-            
             InputAction action = input.actions.FindAction(actionName);
             if (action == null || action.bindings.Count <= index)
             {
@@ -96,13 +94,14 @@ namespace Multiplayer
         {
             if (action == null || index < 0) return;
             
-            // TODO: Show POPUP
             Debug.Log($"Press a {action.expectedControlType} key");
         
             action.Disable();
-            var rebind = action.PerformInteractiveRebinding(index);
+            InputSystem.EnableDevice(Mouse.current);
+            
+            operation = action.PerformInteractiveRebinding(index);
 
-            rebind.OnComplete(operation =>
+            operation.OnComplete(op =>
             {
                 Debug.Log("Finished");
 
@@ -111,14 +110,14 @@ namespace Multiplayer
                 if (CheckDuplicates(action, index, allCompositeParts))
                 {
                     action.RemoveBindingOverride(index);
-                    operation.Dispose();
+                    op.Dispose();
                     Rebind(action, index, allCompositeParts, excludeBindings);
                     return;
                 }
 
                 unavailableKeys.Add(action.bindings[index]);
                 
-                operation.Dispose();
+                op.Dispose();
 
                 if (allCompositeParts)
                 {
@@ -132,33 +131,33 @@ namespace Multiplayer
                 RebindComplete?.Invoke();
             });
 
-            rebind.OnCancel(operation =>
+            operation.OnCancel(op =>
             {
                 Debug.Log("Canceled");
-
+                // BUG: Finishing one time after canceling is not enabling action again.
                 action.Enable();
-                operation.Dispose();
+                op.Dispose();
             
                 RebindCanceled?.Invoke();
             });
 
-            ExcludeControls(ref rebind, excludeBindings);
+            operation.WithCancelingThrough("<Keyboard>/backspace");
+            ExcludeControls(excludeBindings);
 
             RebindStarted?.Invoke(action, index);
-            rebind.Start();
+            operation.Start();
         }
-
+        
         /// <summary>
         /// Excludes the keys from a InputAction.
         /// </summary>
-        /// <param name="op">The operation that should ignore the bindings.</param>
         /// <param name="action">The Input Action that contains the excluding bindings.</param>
-        private void ExcludeControls(ref InputActionRebindingExtensions.RebindingOperation op, InputAction action)
+        private void ExcludeControls(InputAction action)
         {
             foreach (InputBinding binding in action.bindings)
             {
-                if (binding.effectivePath != null) continue;
-                op.WithControlsExcluding(binding.effectivePath);
+                // Will give you an error if there's a <No Binding> binding in excludeBindings.
+                operation.WithControlsExcluding(binding.effectivePath);
             }
         }
 
@@ -177,7 +176,7 @@ namespace Multiplayer
                 if (binding.effectivePath != newBinding.effectivePath) continue;
             
                 Debug.Log("Duplicate found: " + newBinding.effectivePath);
-                OnDuplicateFound?.Invoke();
+                OnDuplicateFound?.Invoke(newBinding.effectivePath);
                 return true;
             }
 
@@ -188,7 +187,7 @@ namespace Multiplayer
                     if (action.bindings[i].effectivePath != newBinding.effectivePath) continue;
                 
                     Debug.Log("Duplicate found: " + newBinding.effectivePath);
-                    OnDuplicateFound?.Invoke();
+                    OnDuplicateFound?.Invoke(newBinding.effectivePath);
                     return true;
                 }
             }
@@ -203,7 +202,6 @@ namespace Multiplayer
                 unavailableKeys.Remove(binding);
             }
         }
-
 
         /// <summary>
         /// Get the binding name.

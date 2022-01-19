@@ -3,6 +3,7 @@ using Enums;
 using Multiplayer;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Snake
@@ -127,10 +128,12 @@ namespace Snake
         /// </summary>
         private void OnClickLeft()
         {
+            if (SceneManager.GetActiveScene().name != Scenes.Preparation.ToString()) return;
+            
             index--;
             if (index <= 0) index = allPresets.snakePresets.Length - 1;
             currentPreset = allPresets.snakePresets[index];
-            
+
             UpdatePreset();
         }
     }

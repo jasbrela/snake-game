@@ -13,7 +13,7 @@ namespace Snake
         [SerializeField] private BoxCollider2D pointBackLeft;
         [SerializeField] private BoxCollider2D pointBackRight;
     
-        [Space(10)][Header("Layers to Avoid")]
+        [Header("Layers to Avoid")]
         [Tooltip("This layer allow the snake to use its battering ram blocks before dying")]
         [SerializeField] private LayerMask obstaclesLayer;
     

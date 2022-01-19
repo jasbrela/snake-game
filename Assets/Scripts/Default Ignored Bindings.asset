@@ -1,0 +1,414 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4398c5a2feef67f41ac3922857266e4f, type: 3}
+  m_Name: Default Ignored Bindings
+  m_EditorClassIdentifier: 
+  bindings:
+    m_Name: Bindings To Exclude
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: cf093520-b33b-4b6d-a06e-8334d53bddca
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: f0f7338f-b59c-4602-9936-e8e57883a780
+      m_Path: <Keyboard>/anyKey
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 36521769-d49b-48d6-899f-a61743b0dd03
+      m_Path: <Keyboard>/backquote
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 17a5b078-b5e6-4478-afd5-f522084ae224
+      m_Path: <Keyboard>/tab
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: a2f389e7-84ed-47ff-9b81-8afb7b68f6a2
+      m_Path: <Keyboard>/capsLock
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: fc8df935-f481-4610-9956-68f769587cab
+      m_Path: <Keyboard>/contextMenu
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: b4997b20-898a-46e0-b97b-e8b6ac323c4d
+      m_Path: <Keyboard>/leftMeta
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 03ac0f94-0444-463c-b280-5ebf311e3432
+      m_Path: <Keyboard>/rightMeta
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 651641d2-86fb-4d63-9b36-7a22e7ebba66
+      m_Path: <Keyboard>/shift
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 5cfe1652-41c6-42b8-a96b-27e4d97e4434
+      m_Path: <Keyboard>/leftShift
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 3fa11081-523d-49ae-bb5d-4b7165f221ce
+      m_Path: <Keyboard>/rightShift
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 2717c29b-914e-4a6b-8516-b2b7df886166
+      m_Path: <Keyboard>/ctrl
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 6d6eb612-1f4a-4988-9061-942c64e16c18
+      m_Path: <Keyboard>/leftCtrl
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 947552cd-dee7-4184-b589-e5e2a435782f
+      m_Path: <Keyboard>/space
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: bcc1ee94-7094-4170-a5f8-493e357b38d5
+      m_Path: <Keyboard>/alt
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 208ac90b-dd8b-4760-91a0-2cbf90ea9400
+      m_Path: <Keyboard>/rightAlt
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 26b3c674-ca9d-49f2-8474-19ab167bf52c
+      m_Path: <Keyboard>/leftAlt
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 65780ff9-c19d-493a-9d13-840945221e7c
+      m_Path: <Keyboard>/enter
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 8b9c8ea1-4610-4cd7-97aa-bcf5d9da23eb
+      m_Path: <Keyboard>/backslash
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 04176a0c-5499-4ceb-816d-d2d67d28ef5d
+      m_Path: <Keyboard>/backspace
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: b839ed2d-6cbc-4ce5-8426-f2f976c8cd35
+      m_Path: <Keyboard>/equals
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 4c7f26e7-58d7-4105-9007-789fc7ee041b
+      m_Path: <Keyboard>/minus
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 81897bd5-fb4b-437e-9d3b-bbba5c00f347
+      m_Path: <Keyboard>/leftBracket
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 9e393d73-f077-4725-a61a-792d588eacbd
+      m_Path: <Keyboard>/rightBracket
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 6c619c9b-ee65-4b46-b4df-fdf7dd26fdae
+      m_Path: <Keyboard>/semicolon
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 5a4bcde9-b391-49f3-b466-84a30ca9858f
+      m_Path: <Keyboard>/quote
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 63e94fdc-da56-4720-ac30-03a0cd6f56c5
+      m_Path: <Keyboard>/comma
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 60beb640-fb1f-4637-85d3-7738213d840b
+      m_Path: <Keyboard>/period
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 8819e576-b491-4f2c-8acf-a1bc3022d822
+      m_Path: <Keyboard>/slash
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: a3b9fc55-a0be-4b73-b614-19c208c10a1c
+      m_Path: <Keyboard>/delete
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: dfe5c6a2-a4bd-4c36-8cd4-93946390a93d
+      m_Path: <Keyboard>/insert
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 4272ddf4-fa79-49eb-a575-2e1d0e9334cd
+      m_Path: <Keyboard>/home
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 95f67754-dd4a-40b3-84e7-07691c903bc7
+      m_Path: <Keyboard>/end
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 18d55913-8c3b-4c2e-8163-345a5b4f7ea8
+      m_Path: <Keyboard>/pageUp
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: b277d5f4-68e3-4a77-93cb-35065d7f9a02
+      m_Path: <Keyboard>/pageDown
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 2caba726-28f4-4e1a-82b8-409c08ba07b1
+      m_Path: <Keyboard>/printScreen
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 7a4cc3f0-2917-457e-bb28-90cc304eff26
+      m_Path: <Keyboard>/scrollLock
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: f92315b8-749a-45f4-8798-f2021282341a
+      m_Path: <Keyboard>/pause
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: d2a1d96f-0497-4300-9b35-412493eb2d97
+      m_Path: <Keyboard>/f1
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: e059b93e-d14f-4742-90b5-cf32eef969ea
+      m_Path: <Keyboard>/f2
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 3c96ed27-905c-4365-b388-293cb3f940ae
+      m_Path: <Keyboard>/f3
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 3c7faa7b-a459-44df-865f-dff1f88af69e
+      m_Path: <Keyboard>/f4
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 3f0158d9-48af-4624-bd6c-3c83a390e247
+      m_Path: <Keyboard>/f5
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 244dd2ee-01b5-4e8c-b590-a0aa1223e219
+      m_Path: <Keyboard>/f6
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: b50068d4-707c-4aed-abb2-47245ba0d2a5
+      m_Path: <Keyboard>/f7
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 58a0988e-d9f4-4a66-8dc0-6b8d690a4372
+      m_Path: <Keyboard>/f8
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: eaf25042-4931-47d9-b78f-1c419c75f1b1
+      m_Path: <Keyboard>/f9
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 580052f5-c4bb-4ca8-8fe7-8ce352489e36
+      m_Path: <Keyboard>/f10
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: fa38be62-5cef-4180-9dea-35ba73abf160
+      m_Path: <Keyboard>/f11
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: f5308cdf-c86f-41c6-8183-344d8a12fcf8
+      m_Path: <Keyboard>/f12
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0

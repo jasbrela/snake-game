@@ -8,6 +8,6 @@ namespace Enums
         MainMenu,
         SingleplayerGame,
         Preparation,
-        
+        MultiplayerGame,
     }
 }
