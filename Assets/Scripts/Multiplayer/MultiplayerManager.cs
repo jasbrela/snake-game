@@ -100,7 +100,7 @@ namespace Multiplayer
         private void CreateCard()
         {
             GameObject card = Instantiate(playerPrefab, transform.position, Quaternion.identity);
-            card.transform.SetParent(cardsParent);
+            card.transform.SetParent(cardsParent, false);
             card.name = $"Adding new player...";
 
             _currentPlayer = card.GetComponent<SnakeManager>();
@@ -248,7 +248,7 @@ namespace Multiplayer
             
             foreach (SnakeManager player in _players)
             {
-                player.transform.SetParent(transform);
+                player.transform.SetParent(transform, false);
                 player.name = $"P{player.ID}";
                 player.ShowHead();
             }
