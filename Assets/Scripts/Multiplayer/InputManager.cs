@@ -131,13 +131,6 @@ namespace Multiplayer
             operation.OnCancel(op =>
             {
                 Debug.Log("Canceled");
-                // BUG: After canceling, a non-existent duplicate is being detected
-                //  1. Add a new player. There can be or not be more players, but I do recommend to have none.
-                //  2. Press backspace to cancel.
-                //  3. Add new player, again. Press one key, then another one. A duplicate will be detected
-                // for the second one, but no popup will be shown.
-                //  4. Press another key. The second key will be replaced, the UI updated and the game will
-                // go back to normal.
                 
                 action.Enable();
                 op.Dispose();
@@ -145,7 +138,7 @@ namespace Multiplayer
                 RebindCanceled?.Invoke();
             });
 
-            operation.WithCancelingThrough("<Keyboard>/backspace");
+            operation.WithCancelingThrough("<Keyboard>/escape");
             ExcludeControls(excludeBindings);
 
             RebindStarted?.Invoke(action, index);

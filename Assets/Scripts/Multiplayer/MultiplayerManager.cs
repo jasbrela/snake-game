@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Enums;
+using JetBrains.Annotations;
 using Snake;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -28,18 +29,20 @@ namespace Multiplayer
         [Header("Rebinding")]
         [SerializeField] private Popup popup;
         [SerializeField] private IgnoredBindings ignored;
+
+        private readonly List<SnakeManager> _players = new List<SnakeManager>();
+        private SnakeManager _currentPlayer;
         
-        private readonly List<SnakeInformation> _snakeInfos = new List<SnakeInformation>();
-        private SnakeInformation _currentInfo;
+        private List<SnakeManager> _alivePlayers = new List<SnakeManager>();
+        private int snakesQuantity;
 
         private void OnEnable() => ListenToEvents();
         private void OnDisable() => StopListeningToEvents();
         private void Awake() => DontDestroyOnLoad(this);
         
-
         private void Start()
         {
-            GameManager.SetMultiplayerGame();
+            GameManager.SetMultiplayerGame(true);
         }
 
         /// <summary>
@@ -49,6 +52,23 @@ namespace Multiplayer
         {
             InputManager.Instance.RebindCanceled += OnRebindCanceled;
             InputManager.Instance.OnDuplicateFound += popup.ShowDuplicateMessage;
+        }
+
+        /// <summary>
+        /// Clean the multiplayer settings.
+        /// </summary>
+        public void OnGoToMainMenu()
+        {
+            foreach (SnakeManager player in _players)
+            {
+                player.input.user.UnpairDevicesAndRemoveUser();
+            }
+            
+            GameManager.SetMultiplayerGame(false);
+
+            Destroy(gameObject);
+            
+            SceneManager.LoadScene(Scenes.MainMenu.ToString());
         }
         
         /// <summary>
@@ -71,7 +91,6 @@ namespace Multiplayer
             InputManager.Instance.RebindComplete += StartNextRebind;
             InputManager.Instance.RebindComplete -= OnSuccessfullyAddedNewPlayer;
 
-            _currentInfo = new SnakeInformation(_snakeInfos.Count + 1);
             CreateCard();
         }
 
@@ -84,18 +103,15 @@ namespace Multiplayer
             card.transform.SetParent(cardsParent);
             card.name = $"Adding new player...";
 
-            _currentInfo.Card = card;
-            _currentInfo.Color = GetRandomColor();
+            _currentPlayer = card.GetComponent<SnakeManager>();
+            _currentPlayer.ID = _players.Count + 1;
+            _currentPlayer.Color = GetRandomColor();
+            _currentPlayer.OnClickDelete += RemovePlayerFromCard;
+            InputUser.PerformPairingWithDevice(Keyboard.current, _currentPlayer.input.user);
 
-            _currentInfo.SetManager(card.GetComponent<SnakeManager>());
-            _currentInfo.Manager.OnClickDelete += RemovePlayerFromCard;
+            _players.Add(_currentPlayer);
 
-            _currentInfo.Input = _currentInfo.Manager.GetHead().GetComponent<PlayerInput>();
-            InputUser.PerformPairingWithDevice(Keyboard.current, _currentInfo.Input.user);
-
-            _snakeInfos.Add(_currentInfo);
-
-            InputManager.Instance.StartRebind(_currentInfo.Input, InputActions.TurnLeft.ToString(),
+            InputManager.Instance.StartRebind(_currentPlayer.input, InputActions.TurnLeft.ToString(),
                 0, ignored.bindings);
         }
 
@@ -111,6 +127,9 @@ namespace Multiplayer
         /// </summary>
         private void OnRebindCanceled()
         {
+            InputManager.Instance.RebindComplete -= StartNextRebind;
+            InputManager.Instance.RebindComplete -= OnSuccessfullyAddedNewPlayer;
+            
             RemovePlayerFromCancelledRebind();
             newCardButton.interactable = true;
             startGameButton.interactable = true;
@@ -122,10 +141,10 @@ namespace Multiplayer
         /// </summary>
         private void RemovePlayerFromCancelledRebind()
         {
-            _snakeInfos[_currentInfo.ID - 1].Input.user.UnpairDevicesAndRemoveUser();
-            Destroy(_snakeInfos[_currentInfo.ID - 1].Card);
-            _snakeInfos.RemoveAt(_currentInfo.ID - 1);
-            if (newCardButton.interactable == false && _snakeInfos.Count < 12) newCardButton.interactable = true;
+            _players[_currentPlayer.ID - 1].input.user.UnpairDevicesAndRemoveUser();
+            Destroy(_players[_currentPlayer.ID - 1].gameObject);
+            _players.RemoveAt(_currentPlayer.ID - 1);
+            if (newCardButton.interactable == false && _players.Count < 12) newCardButton.interactable = true;
         }
     
         /// <summary>
@@ -134,7 +153,7 @@ namespace Multiplayer
         /// <param name="index">Player's index</param>
         private void RemovePlayerFromCard(int index)
         {
-            foreach (InputAction action in _snakeInfos[index].Input.actions)
+            foreach (InputAction action in _players[index].input.actions)
             {
                 foreach (InputBinding binding in action.bindings)
                 {
@@ -142,38 +161,46 @@ namespace Multiplayer
                 }
             }
 
-            for (int i = index; i < _snakeInfos.Count; i++)
+            for (int i = index; i < _players.Count; i++)
             {
-                var info = _snakeInfos[i];
+                var player = _players[i];
 
-                info.Manager.UpdateID(i);
-                info.Card.name = $"P{info.ID}'s Card";
+                player.UpdateID(i);
+                player.name = $"P{player.ID}'s Card";
             }
             
-            _snakeInfos[index].Input.user.UnpairDevicesAndRemoveUser();
-            Destroy(_snakeInfos[index].Card);
-            _snakeInfos.Remove(_snakeInfos[index]);
-            if (newCardButton.interactable == false && _snakeInfos.Count < 12) newCardButton.interactable = true;
+            _players[index].input.user.UnpairDevicesAndRemoveUser();
+            Destroy(_players[index].gameObject);
+            _players.Remove(_players[index]);
+            if (newCardButton.interactable == false && _players.Count < 12) newCardButton.interactable = true;
         }
         /// <summary>
-        /// Removes the player after his snake dies.
+        /// Subtract the player from alive list.
         /// </summary>
-        /// <param name="manager">The player's snake's Snake Manager.</param>
-        private void RemovePlayerFromDeath(SnakeManager manager)
+        /// <param name="manager">The player's snake's Snake Manager. Null if it's AI.</param>
+        private void RemovePlayerFromDeath([CanBeNull] SnakeManager manager)
         {
-            // TODO: Add game over
+            if (manager != null) _alivePlayers.Remove(manager);
+            OnDeath();
+        }
+
+        /// <summary>
+        /// Check if there's only one snake alive. If so, ends the game.
+        /// </summary>
+        private void OnDeath()
+        {
+            snakesQuantity--;
             
-            _snakeInfos[manager.Info.ID - 1].Input.user.UnpairDevicesAndRemoveUser();
-            Destroy(_snakeInfos[manager.Info.ID - 1].Card);
-        }
-        
-        /// <summary>
-        /// Destroy the AI snake when it dies.
-        /// </summary>
-        /// <param name="parent">The AI snake's parent</param>
-        private void RemoveAIFromDeath(GameObject parent)
-        {
-            Destroy(parent);
+            if (_alivePlayers.Count == 0)
+            {
+                GameManager.Instance.EndGame();
+            }
+            
+            if (_alivePlayers.Count == 1 && snakesQuantity == 1)
+            {
+                GameManager.Instance.OnHumanPlayerWins($"P{_alivePlayers[0].ID}", _alivePlayers[0].Color);
+                GameManager.Instance.EndGame();
+            }
         }
 
         /// <summary>
@@ -183,7 +210,7 @@ namespace Multiplayer
         {
             InputManager.Instance.RebindComplete -= StartNextRebind;
             InputManager.Instance.RebindComplete += OnSuccessfullyAddedNewPlayer;
-            InputManager.Instance.StartRebind(_currentInfo.Input, InputActions.TurnRight.ToString(),
+            InputManager.Instance.StartRebind(_currentPlayer.input, InputActions.TurnRight.ToString(),
                 0, ignored.bindings);
         }
 
@@ -196,13 +223,13 @@ namespace Multiplayer
             newCardButton.interactable = true;
             startGameButton.interactable = true;
 
-            var info = _snakeInfos[_snakeInfos.Count - 1];
-            info.Card.name = $"P{info.ID}'s Card";
+            var player = _players[_players.Count - 1];
+            player.name = $"P{player.ID}'s Card";
             
-            _currentInfo.Manager.ShowCard();
+            _currentPlayer.ShowCard();
             newCard.SetAsLastSibling();
 
-            if (_snakeInfos.Count == 12) newCardButton.interactable = false;
+            if (_players.Count == 12) newCardButton.interactable = false;
         }
 
         /// <summary>
@@ -210,21 +237,20 @@ namespace Multiplayer
         /// </summary>
         public void OnClickStart()
         {
-            StopListeningToEvents();
-            SceneManager.sceneLoaded += SetUpSnakes;
-
-            if (_snakeInfos.Count < minimumPlayers)
+            if (_players.Count < minimumPlayers)
             {
                 popup.ShowNotEnoughPlayersMessage(minimumPlayers);
                 return;
             }
             
-            foreach (SnakeInformation snake in _snakeInfos)
+            StopListeningToEvents();
+            SceneManager.sceneLoaded += OnLoadMap;
+            
+            foreach (SnakeManager player in _players)
             {
-                snake.Card.transform.SetParent(transform);
-                snake.Card.transform.position = Vector3.zero;
-                snake.Card.name = $"P{snake.ID}";
-                snake.Manager.ShowHead();
+                player.transform.SetParent(transform);
+                player.name = $"P{player.ID}";
+                player.ShowHead();
             }
             
             LoadMap();
@@ -235,19 +261,19 @@ namespace Multiplayer
         /// </summary>
         private void LoadMap()
         {
-            if (_snakeInfos.Count <= 3)
+            if (_players.Count <= 3)
             {
                 SceneManager.LoadScene(Scenes.MultiplayerGameSmall.ToString());
             }
-            else if (_snakeInfos.Count <= 6)
+            else if (_players.Count <= 6)
             {
                 SceneManager.LoadScene(Scenes.MultiplayerGameMedium.ToString());
             }
-            else if (_snakeInfos.Count <= 9)
+            else if (_players.Count <= 9)
             {
                 SceneManager.LoadScene(Scenes.MultiplayerGameLarge.ToString());
             }
-            else if (_snakeInfos.Count <= 12)
+            else if (_players.Count <= 12)
             {
                 SceneManager.LoadScene(Scenes.MultiplayerGameExtraLarge.ToString());
             }
@@ -256,26 +282,48 @@ namespace Multiplayer
         /// <summary>
         /// Set up the snakes on load map.
         /// </summary>
-        private void SetUpSnakes(Scene scene, LoadSceneMode mode)
+        private void OnLoadMap(Scene scene, LoadSceneMode mode)
         {
-            SceneManager.sceneLoaded -= SetUpSnakes;
+            SceneManager.sceneLoaded -= OnLoadMap;
             
             if (!scene.name.Contains("Multiplayer")) return;
+            GameManager.Instance.SendOnPressRetryCallback(Restart);
+            GameManager.Instance.SendOnPressMainMenu(OnGoToMainMenu);
+
+            SetUpSnakes();
             
-            foreach (SnakeInformation snake in _snakeInfos)
+            GameManager.Instance.Retry();
+        }
+        
+        /// <summary>
+        /// Resets the snake quantity.
+        /// </summary>
+        private void Restart()
+        {
+            _alivePlayers = new List<SnakeManager>(_players);
+            snakesQuantity = _alivePlayers.Count * 2;
+        }
+        
+        /// <summary>
+        /// Set up the snakes.
+        /// </summary>
+        private void SetUpSnakes()
+        {
+            Restart();
+            
+            foreach (SnakeManager player in _players)
             {
                 GameObject ai = Instantiate(AIPrefab, transform);
                 SnakeController aiController = ai.GetComponentInChildren<SnakeController>();
-                aiController.SetColor(GetAIColor(snake.Color));
-                aiController.SendOnAISnakeDieCallback(RemoveAIFromDeath);
+                aiController.SetColor(GetAIColor(player.Color));
+                aiController.SetOnSnakeDieCallback(RemovePlayerFromDeath);
                 
-                snake.Manager.EnableSnakeController();
-                snake.Manager.GetSnakeController().SendOnPlayerSnakeDieCallback(RemovePlayerFromDeath);
-                snake.Manager.GetSnakeController().SetColor(snake.Color);
-                snake.Manager.GetSnakeController().ResetSnake();
+                player.ShowSnake();
+                player.transform.position = Vector3.zero;
+                player.GetSnakeController().SetOnSnakeDieCallback(RemovePlayerFromDeath);
+                player.EnableSnakeController();
+                player.GetSnakeController().SetColor(player.Color);
             }
-
-            GameManager.Instance.Retry();
         }
 
         /// <summary>

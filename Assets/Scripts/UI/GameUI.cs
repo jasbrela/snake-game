@@ -8,8 +8,13 @@ namespace UI
     public class GameUI : MonoBehaviour
     {
         [SerializeField] private GameObject gameOverPanel;
+        [SerializeField] private TextMeshProUGUI playerName;
+        [SerializeField] private GameObject victoryMessage;
+        [SerializeField] private GameObject defeatMessage;
         [SerializeField] private TextMeshProUGUI tickText;
         [SerializeField] private GameObject tickTextGameObject;
+
+        private bool humanWin;
 
         private void Awake()
         {
@@ -17,6 +22,7 @@ namespace UI
             GameManager.Instance.SendOnPressRetryCallback(HideGameOverPanel);
             GameManager.Instance.SendOnGameOverCallback(ShowGameOverPanel);
             GameManager.Instance.SendOnTickCallback(OnTick);
+            GameManager.Instance.SendOnVictoryCallback(ShowPlayerWonMessage);
         }
 
         /// <summary>
@@ -26,12 +32,42 @@ namespace UI
         {
             gameOverPanel.SetActive(false);
         }
+
+        /// <summary>
+        /// Shows a message telling who won.
+        /// </summary>
+        /// <param name="name">Player's name</param>
+        /// <param name="color">Player's color</param>
+        private void ShowPlayerWonMessage(string name, Color color)
+        {
+            humanWin = true;
+            playerName.text = name;
+            playerName.color = color;
+        }
+
+        /// <summary>
+        /// If the a player won, show the victory message, otherwise show defeat message.
+        /// </summary>
+        private void ShowMessage()
+        {
+            if (!humanWin)
+            {
+                victoryMessage.SetActive(false);
+                defeatMessage.SetActive(true);
+            }
+            else
+            {
+                victoryMessage.SetActive(true);
+                defeatMessage.SetActive(false);
+            }
+        }
         
         /// <summary>
         /// Show the Game Over panel.
         /// </summary>
         private void ShowGameOverPanel()
         {
+            ShowMessage();
             gameOverPanel.SetActive(true);
         }
     
@@ -40,6 +76,7 @@ namespace UI
         /// </summary>
         public void OnPressMainMenu()
         {
+            GameManager.Instance.ClickMainMenu();
             SceneManager.LoadScene(Scenes.MainMenu.ToString());
         }
 
@@ -60,6 +97,15 @@ namespace UI
             }
 
             tickText.text = tickCounter.ToString();
+        }
+
+        /// <summary>
+        /// Restarts the game.
+        /// </summary>
+        public void OnPressRetry()
+        {
+            humanWin = false;
+            GameManager.Instance.Retry();
         }
     }
 }

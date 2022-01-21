@@ -87,9 +87,18 @@ namespace Blocks
         /// Used to send callbacks to be called when the Block Manager generates a new position.
         /// </summary>
         /// <param name="method">A method to be called</param>
-        public void SendOnGeneratedRandomPositionCallback(OnGeneratedRandomPos method)
+        /// <param name="unsubscribe">Stop listening to the event?</param>
+
+        public void SendOnGeneratedRandomPositionCallback(OnGeneratedRandomPos method, bool unsubscribe = false)
         {
-            _onGeneratedRandomPos += method;
+            if (unsubscribe)
+            {
+                _onGeneratedRandomPos -= method;
+            }
+            else
+            {
+                _onGeneratedRandomPos += method;
+            }
         }
 
         /// <summary>

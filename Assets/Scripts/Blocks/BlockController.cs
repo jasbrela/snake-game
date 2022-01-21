@@ -14,6 +14,7 @@ namespace Blocks
         {
             BlockManager.Instance.SendBoundsCollider(boundsCollider);
             GameManager.Instance.SendOnGameStartsForTheFirstTimeCallback(SetUpBlock);
+            if (boundsCollider.enabled) boundsCollider.enabled = false;
         }
 
         /// <summary>

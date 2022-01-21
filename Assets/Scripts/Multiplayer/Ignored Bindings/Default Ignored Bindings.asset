@@ -109,6 +109,14 @@ MonoBehaviour:
       m_Action: Bindings To Exclude
       m_Flags: 0
     - m_Name: 
+      m_Id: 50a76c53-2e20-48a2-a541-c21a4743419d
+      m_Path: <Keyboard>/rightCtrl
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
       m_Id: 6d6eb612-1f4a-4988-9061-942c64e16c18
       m_Path: <Keyboard>/leftCtrl
       m_Interactions: 
@@ -407,6 +415,38 @@ MonoBehaviour:
     - m_Name: 
       m_Id: f5308cdf-c86f-41c6-8183-344d8a12fcf8
       m_Path: <Keyboard>/f12
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 4a896da8-2786-4b77-9eaf-cfced4ba9aac
+      m_Path: <Keyboard>/leftArrow
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 7ac60d5f-fdef-48ea-bb65-04d349f1b119
+      m_Path: <Keyboard>/upArrow
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: dd6e2fa0-cf2c-4d2e-bec5-0ea9a9e3b5c2
+      m_Path: <Keyboard>/rightArrow
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Bindings To Exclude
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 801ac761-bca1-49ea-8eee-f05b6ba680fd
+      m_Path: <Keyboard>/downArrow
       m_Interactions: 
       m_Processors: 
       m_Groups: 

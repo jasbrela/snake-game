@@ -56,7 +56,7 @@ namespace Multiplayer
             if (Application.isPlaying && snake != null)
             {
                 rebindText.text =
-                    InputManager.Instance.GetBindingName(snake.Info.Input, _actionName, _bindingIndex,
+                    InputManager.Instance.GetBindingName(snake.input, _actionName, _bindingIndex,
                         displayStringOptions);
             }
             else

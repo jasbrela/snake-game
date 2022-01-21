@@ -3,6 +3,7 @@ using Enums;
 using Multiplayer;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -10,6 +11,9 @@ namespace Snake
 {
     public class SnakeManager : MonoBehaviour
     {
+        [Header("Snake")]
+        [SerializeField] public PlayerInput input;
+        
         [Header("Snake's Card")]
         [SerializeField] private GameObject card;
         [SerializeField] private Image snakeHead;
@@ -21,21 +25,22 @@ namespace Snake
         [Header("Snake's Head")]
         [SerializeField] private SnakeController controller;
         [SerializeField] private SpriteRenderer headSprite;
-        [SerializeField] private GameObject head;
 
+        public int ID { get; set; }
+        public Color Color { get; set; }
+        
         public event Action<int> OnClickDelete;
 
         private int index;
         [HideInInspector] public SnakePreset currentPreset;
-        public SnakeInformation Info { get; set; }
-        
+
         /// <summary>
         /// Set up the controls for human players.
         /// </summary>
         private void SetUpControls()
         {
-            Info.Input.actions[InputActions.TurnLeft.ToString()].performed += _ => OnClickLeft();
-            Info.Input.actions[InputActions.TurnRight.ToString()].performed += _ => OnClickRight();
+            input.actions[InputActions.TurnLeft.ToString()].performed += _ => OnClickLeft();
+            input.actions[InputActions.TurnRight.ToString()].performed += _ => OnClickRight();
         }
 
         /// <summary>
@@ -44,7 +49,7 @@ namespace Snake
         /// <param name="newID">The new ID.</param>
         public void UpdateID(int newID)
         {
-            Info.ID = newID;
+            ID = newID;
             UpdateCard();
         }
         
@@ -59,7 +64,7 @@ namespace Snake
             card.SetActive(true);
             
             SetUpControls();
-            Info.Input.actions.Enable();
+            input.actions.Enable();
         }
 
         /// <summary>
@@ -69,8 +74,8 @@ namespace Snake
         {
             UpdatePreset();
             
-            nickname.text = $"P{Info.ID}";
-            snakeHead.color = Info.Color;
+            nickname.text = $"P{ID}";
+            snakeHead.color = Color;
         }
         
         /// <summary>
@@ -87,10 +92,16 @@ namespace Snake
         /// </summary>
         public void ShowHead()
         {
-            //Info.Input.actions.Disable();
-            
             card.SetActive(false);
             headSprite.enabled = true;
+        }
+
+        /// <summary>
+        /// Show the snake
+        /// </summary>
+        public void ShowSnake()
+        {
+            gameObject.SetActive(true);
         }
         
         /// <summary>
@@ -98,19 +109,10 @@ namespace Snake
         /// </summary>
         public void RemovePlayer()
         {
-            OnClickDelete?.Invoke(Info.ID - 1);
+            OnClickDelete?.Invoke(ID - 1);
             Destroy(gameObject);
         }
 
-        /// <summary>
-        /// Get this Snake's head.
-        /// </summary>
-        /// <returns>A GameObject of a Snake's Head</returns>
-        public GameObject GetHead()
-        {
-            return head;
-        }
-        
         /// <summary>
         /// Get this Snake's SnakeController.
         /// </summary>
@@ -121,9 +123,8 @@ namespace Snake
         }
         
         /// <summary>
-        /// Get this Snake's SnakeController.
+        /// Enable this Snake's SnakeController.
         /// </summary>
-        /// <returns>This Snake's SnakeController</returns>
         public void EnableSnakeController()
         {
             controller.enabled = true;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Blocks;
 using Enums;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
@@ -35,7 +36,7 @@ namespace Snake
 
         // PLAYER
         private PlayerInput _input;
-        private SnakeManager manager;
+        [CanBeNull] private SnakeManager manager; // Null if it's AI.
 
         // AI
         private Vector3 _direction;
@@ -47,32 +48,21 @@ namespace Snake
         private bool _canTurn = true;
         private bool _canTurnDrastically;
         private bool _collided;
+        private bool died; // stop movement
         
-        public delegate void OnPlayerSnakeDie(SnakeManager manager);
-        private OnPlayerSnakeDie onPlayerSnakeDieCallback;
-        
-        public delegate void OnAISnakeDie(GameObject parent);
-        private OnAISnakeDie onAISnakeDieCallback;
+        public delegate void OnPlayerSnakeDie([CanBeNull] SnakeManager manager);
+        private OnPlayerSnakeDie onSnakeDieCallback;
         #endregion
 
         /// <summary>
-        /// Used to send the callback to be called when the player dies.
+        /// Used to send the callback to be called when the snake dies.
         /// </summary>
         /// <param name="onPlayerSnakeDie">A void method to be called.</param>
-        public void SendOnPlayerSnakeDieCallback(OnPlayerSnakeDie onPlayerSnakeDie)
+        public void SetOnSnakeDieCallback(OnPlayerSnakeDie onPlayerSnakeDie)
         {
-            if (!isAI) onPlayerSnakeDieCallback = onPlayerSnakeDie;
+            onSnakeDieCallback = onPlayerSnakeDie;
         }
-        
-        /// <summary>
-        /// Used to send the callback to be called when the AI dies.
-        /// </summary>
-        /// <param name="onAISnakeDie">A void method to be called.</param>
-        public void SendOnAISnakeDieCallback(OnAISnakeDie onAISnakeDie)
-        {
-            if (isAI) onAISnakeDieCallback = onAISnakeDie;
-        }
-        
+
         /// <summary>
         /// Sets the snake's color
         /// </summary>
@@ -87,6 +77,7 @@ namespace Snake
         {
             if (!isAI) _input = GetComponent<PlayerInput>();
             GameManager.Instance.SendOnPressRetryCallback(ResetSnake);
+            
             _headSprite = GetComponent<SpriteRenderer>();
             
             GameManager.Instance.SendOnGameStartsForTheFirstTimeCallback(StartGame);
@@ -99,7 +90,7 @@ namespace Snake
             if (GameManager.IsAMultiplayerGame() && !isAI)
             {
                 manager = transform.parent.GetComponent<SnakeManager>();
-                color = manager.Info.Color;
+                color = manager.Color;
             }
             
             if (!isAI) return;
@@ -126,6 +117,11 @@ namespace Snake
         /// </summary>
         public void ResetSnake()
         {
+            died = false;
+            if (!_headSprite.enabled)
+            {
+                _headSprite.enabled = true;
+            }
             _canTurnDrastically = true;
             snakePowerUp.ResetPowerUps();
             ResetBodyParts();
@@ -184,10 +180,14 @@ namespace Snake
         /// </summary>
         private void ResetBodyParts()
         {
-            foreach (var part in _bodyParts.Where(part => part != transform))
+            if (_bodyParts.Count > 1)
             {
-                Destroy(part.gameObject);
+                foreach (var part in _bodyParts.Where(part => part != transform))
+                {
+                    Destroy(part.gameObject);
+                }
             }
+
             _bodyParts.Clear();
             _bodyParts.Add(transform);
             _headSprite.enabled = false;
@@ -224,7 +224,10 @@ namespace Snake
 
                 if (isAI) TurnAI();
                 if (HasCollided()) yield return null;
-                while (GameManager.Instance.IsGameOver()) yield return null;
+                while (died || GameManager.Instance.IsGameOver())
+                {
+                    yield return null;
+                }
                 MoveSnakeBody();
                 
                 yield return new WaitForSeconds(snakeWeight.Speed);
@@ -312,14 +315,11 @@ namespace Snake
 
             if (GameManager.IsAMultiplayerGame())
             {
-                if (isAI)
-                {
-                    onAISnakeDieCallback?.Invoke(transform.parent.gameObject);
-                }
-                else
-                {
-                    onPlayerSnakeDieCallback?.Invoke(manager);
-                }
+                ResetBodyParts();
+                transform.position = GameManager.Instance.GetDeadPosition();
+                _headSprite.enabled = false;
+                onSnakeDieCallback?.Invoke(manager);
+                died = true;
                 return true;
             }
 

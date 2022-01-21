@@ -30,8 +30,17 @@ public class GameManager : MonoBehaviour
     public delegate void OnGameOver();
     private OnGameOver _onGameOver;
     
+    public delegate void OnVictory(string name, Color color);
+    private OnVictory _onVictory;
+    
     public delegate Vector3 GetSpawnPoint();
     private GetSpawnPoint _getSpawnPoint;
+    
+    public delegate Vector3 GetDeadPoint();
+    private GetDeadPoint _getDeadPoint;
+    
+    public delegate void OnClickMainMenu();
+    private OnClickMainMenu _onClickMainMenu;
     
     public delegate void OnTick(int tick);
     private OnTick _onTick;
@@ -63,7 +72,6 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         if (SceneManager.GetActiveScene().name != Scenes.SingleplayerGame.ToString()) return;
-
         Retry();
     }
     
@@ -86,13 +94,14 @@ public class GameManager : MonoBehaviour
         if (!_hasStarted)
         {
             _hasStarted = true;
-            _onGameStartsForTheFirstTime();
+            _onGameStartsForTheFirstTime?.Invoke();
         }
 
         _gameOver = false;
     }
 
     #region Receive Callbacks
+
     /// <summary>
     /// Used to send callbacks to be called when the game starts.
     /// </summary>
@@ -119,6 +128,15 @@ public class GameManager : MonoBehaviour
     {
         _onPressRetry += method;
     }
+    
+    /// <summary>
+    /// Used to send callbacks to be called when Player presses the Main Menu button.
+    /// </summary>
+    /// <param name="method">A void method to be called</param>
+    public void SendOnPressMainMenu(OnClickMainMenu method)
+    {
+        _onClickMainMenu += method;
+    }
         
     /// <summary>
     /// Used to send callbacks to be called when the game is over.
@@ -128,14 +146,26 @@ public class GameManager : MonoBehaviour
     {
         _onGameOver += method;
     }
+    
+    /// <summary>
+    /// Used to send callbacks to be called when a human player wins.
+    /// </summary>
+    /// <param name="method">A void method to be called</param>
+    public void SendOnVictoryCallback(OnVictory method)
+    {
+        _onVictory += method;
+    }
 
     /// <summary>
-    /// Used to send callbacks to be called when Player asks for a spawn point..
+    /// Used to send callbacks to be called when Player asks for a certain point to teleport..
     /// </summary>
-    /// <param name="method">A Vector3 method to be called</param>
-    public void SendGetSpawnPointsCallback(GetSpawnPoint method)
+    /// <param name="spawnMethod">A Vector3 method to be called on Get Spawn Point</param>
+    /// <param name="deadMethod">A Vector3 method to be called on Get Dead Point</param>
+
+    public void SendPointsCallback(GetSpawnPoint spawnMethod, GetDeadPoint deadMethod)
     {
-        _getSpawnPoint += method;
+        _getSpawnPoint += spawnMethod;
+        _getDeadPoint += deadMethod;
     }
     #endregion
 
@@ -146,6 +176,17 @@ public class GameManager : MonoBehaviour
     {
         _gameOver = true;
         _onGameOver?.Invoke();
+    }
+    
+    /// <summary>
+    /// Calls the onVictory delegate.
+    /// </summary>
+    /// <param name="name">The snake's nickname</param>
+    /// <param name="color">The snake's color</param>
+    public void OnHumanPlayerWins(string name, Color color)
+    {
+        if (!_isMultiplayer) return;
+        _onVictory?.Invoke(name, color);
     }
 
     /// <summary>
@@ -174,18 +215,36 @@ public class GameManager : MonoBehaviour
     {
         return _getSpawnPoint();
     }
+    
+    /// <summary>
+    /// Called by the Player to get the dead position.
+    /// </summary>
+    /// <returns>A Vector3 of the dead position.</returns>
+    public Vector3 GetDeadPosition()
+    {
+        return _getDeadPoint();
+    }
 
     /// <summary>
-    /// Set isMultiplayer to true.
+    /// Change isMultiplayer status.
     /// </summary>
-    public static void SetMultiplayerGame()
+    /// <param name="isMultiplayer">Is this game multiplayer?</param>
+    public static void SetMultiplayerGame(bool isMultiplayer)
     {
-        _isMultiplayer = true;
+        _isMultiplayer = isMultiplayer;
     }
-    
+
     /// <returns>Is this a multiplayer game?</returns>
     public static bool IsAMultiplayerGame()
     {
         return _isMultiplayer;
+    }
+
+    /// <summary>
+    /// Reset the game
+    /// </summary>
+    public void ClickMainMenu()
+    {
+        _onClickMainMenu?.Invoke();
     }
 }
