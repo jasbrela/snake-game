@@ -269,22 +269,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2855969844479117267, guid: 86cfef5cf0a69554a93051f892c322c7, type: 3}
-      propertyPath: m_Icon
-      value: 
-      objectReference: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
-    - target: {fileID: 2855969844479117267, guid: 86cfef5cf0a69554a93051f892c322c7, type: 3}
-      propertyPath: m_Name
-      value: Collision Predictor Front
-      objectReference: {fileID: 0}
-    - target: {fileID: 2855969844479117267, guid: 86cfef5cf0a69554a93051f892c322c7, type: 3}
-      propertyPath: m_TagString
-      value: Untagged
-      objectReference: {fileID: 0}
-    - target: {fileID: 3099435389539631393, guid: 86cfef5cf0a69554a93051f892c322c7, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3201769380009985394, guid: 86cfef5cf0a69554a93051f892c322c7, type: 3}
       propertyPath: m_Actions
       value: 
@@ -572,38 +556,6 @@ PrefabInstance:
     - target: {fileID: 3578424883084035673, guid: 86cfef5cf0a69554a93051f892c322c7, type: 3}
       propertyPath: m_RootOrder
       value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3578424883084035673, guid: 86cfef5cf0a69554a93051f892c322c7, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3578424883084035673, guid: 86cfef5cf0a69554a93051f892c322c7, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5080142224571456794, guid: 86cfef5cf0a69554a93051f892c322c7, type: 3}
-      propertyPath: m_Size.x
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 5080142224571456794, guid: 86cfef5cf0a69554a93051f892c322c7, type: 3}
-      propertyPath: m_Size.y
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 5080142224571456794, guid: 86cfef5cf0a69554a93051f892c322c7, type: 3}
-      propertyPath: m_SpriteTilingProperty.drawMode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5080142224571456794, guid: 86cfef5cf0a69554a93051f892c322c7, type: 3}
-      propertyPath: m_SpriteTilingProperty.newSize.x
-      value: 0.64
-      objectReference: {fileID: 0}
-    - target: {fileID: 5080142224571456794, guid: 86cfef5cf0a69554a93051f892c322c7, type: 3}
-      propertyPath: m_SpriteTilingProperty.newSize.y
-      value: 0.64
-      objectReference: {fileID: 0}
-    - target: {fileID: 6098291113542137276, guid: 86cfef5cf0a69554a93051f892c322c7, type: 3}
-      propertyPath: m_Enabled
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6098291113542137279, guid: 86cfef5cf0a69554a93051f892c322c7, type: 3}
       propertyPath: m_TagString

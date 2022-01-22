@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4652742233347396955}
   m_Layer: 0
   m_Name: Collision Predictor Front
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 2855969844479117267}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 1, y: 0, z: 0}
-  m_LocalScale: {x: 6.25, y: 6.25, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6098291113542137264}
   m_RootOrder: 1
@@ -50,13 +50,13 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 1, y: 1}
-    newSize: {x: 0.05, y: 0.05}
+    newSize: {x: 0.64, y: 0.64}
     adaptiveTilingThreshold: 0.5
-    drawMode: 1
+    drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.1, y: 0.1}
+  m_Size: {x: 0.25, y: 0.25}
   m_EdgeRadius: 0
 --- !u!50 &4652742233347396955
 Rigidbody2D:
@@ -427,4 +427,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 0.5
   weightPerBlock: 1
-  powerEngineBonus: 1.15
+  enginePowerBonus: 1.15

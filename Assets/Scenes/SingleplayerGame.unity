@@ -218,6 +218,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player Snake
       objectReference: {fileID: 0}
+    - target: {fileID: 6683905177787165339, guid: 86cfef5cf0a69554a93051f892c322c7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 86cfef5cf0a69554a93051f892c322c7, type: 3}
 --- !u!1001 &281955544
