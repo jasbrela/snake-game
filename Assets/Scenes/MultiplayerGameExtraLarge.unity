@@ -498,7 +498,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 3, y: -3}
+  m_AnchoredPosition: {x: 3.5, y: -3}
   m_SizeDelta: {x: 36, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &508485545
@@ -755,7 +755,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1581475812609221676, guid: 60c969bb5efc1d44dbfb206f1b959520, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 1581475812609221676, guid: 60c969bb5efc1d44dbfb206f1b959520, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -807,7 +807,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3675855897430346567, guid: 60c969bb5efc1d44dbfb206f1b959520, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -1
+      value: -1.5
       objectReference: {fileID: 0}
     - target: {fileID: 3962497988928512456, guid: 60c969bb5efc1d44dbfb206f1b959520, type: 3}
       propertyPath: m_RootOrder
@@ -1252,7 +1252,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -3, y: -2}
+  m_AnchoredPosition: {x: -3.5, y: -2}
   m_SizeDelta: {x: 36, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &921969116
@@ -1318,7 +1318,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -5, y: -4}
+  m_AnchoredPosition: {x: -5.5, y: -4}
   m_SizeDelta: {x: 36, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &924349879
@@ -1384,7 +1384,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 6, y: -5}
+  m_AnchoredPosition: {x: 5.5, y: -5}
   m_SizeDelta: {x: 36, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1104912689

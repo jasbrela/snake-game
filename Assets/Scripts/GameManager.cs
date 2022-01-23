@@ -20,9 +20,13 @@ public class GameManager : MonoBehaviour
         }
     }
     #endregion
+    
     #region Callbacks
     public delegate void OnGameStartsForTheFirstTime();
     private OnGameStartsForTheFirstTime _onGameStartsForTheFirstTime;
+    
+    public delegate void OnGameStarts();
+    private OnGameStarts _onGameStarts;
     
     public delegate void OnPressRetry();
     private OnPressRetry _onPressRetry;
@@ -45,13 +49,14 @@ public class GameManager : MonoBehaviour
     public delegate void OnTick(int tick);
     private OnTick _onTick;
     #endregion
+    
     #region Variables
     private int _tickCount = 3;
     private int _tickDefaultValue;
     private int _maxSpawnPointIndex;
+    private static bool _isMultiplayer;
     private bool _gameOver = true;
     private bool _hasStarted;
-    private static bool _isMultiplayer;
     #endregion
 
     private void Awake()
@@ -96,6 +101,7 @@ public class GameManager : MonoBehaviour
             _hasStarted = true;
             _onGameStartsForTheFirstTime?.Invoke();
         }
+        _onGameStarts?.Invoke();
 
         _gameOver = false;
     }
@@ -103,12 +109,21 @@ public class GameManager : MonoBehaviour
     #region Receive Callbacks
 
     /// <summary>
-    /// Used to send callbacks to be called when the game starts.
+    /// Used to send callbacks to be called when the game starts for the first time.
     /// </summary>
     /// <param name="method">A void method to be called</param>
     public void SendOnGameStartsForTheFirstTimeCallback(OnGameStartsForTheFirstTime method)
     {
         _onGameStartsForTheFirstTime += method;
+    }
+    
+    /// <summary>
+    /// Used to send callbacks to be called when the game starts, whether it's first time or not.
+    /// </summary>
+    /// <param name="method">A void method to be called</param>
+    public void SendOnGameStartsCallback(OnGameStarts method)
+    {
+        _onGameStarts += method;
     }
     
     /// <summary>
@@ -181,12 +196,12 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Calls the onVictory delegate.
     /// </summary>
-    /// <param name="name">The snake's nickname</param>
+    /// <param name="nick">The snake's nickname</param>
     /// <param name="color">The snake's color</param>
-    public void OnHumanPlayerWins(string name, Color color)
+    public void OnHumanPlayerWins(string nick, Color color)
     {
         if (!_isMultiplayer) return;
-        _onVictory?.Invoke(name, color);
+        _onVictory?.Invoke(nick, color);
     }
 
     /// <summary>

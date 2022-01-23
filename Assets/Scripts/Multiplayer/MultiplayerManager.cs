@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Blocks;
 using Enums;
 using JetBrains.Annotations;
 using Snake;
@@ -34,6 +35,7 @@ namespace Multiplayer
         private SnakeManager _currentPlayer;
         
         private List<SnakeManager> _alivePlayers = new List<SnakeManager>();
+        private readonly List<SnakeController> _aiSnakes = new List<SnakeController>();
         private int snakesQuantity;
 
         private void OnEnable() => ListenToEvents();
@@ -43,6 +45,16 @@ namespace Multiplayer
         private void Start()
         {
             GameManager.SetMultiplayerGame(true);
+        }
+
+        /// <summary>
+        /// Updates the Snake AI's target direction.
+        /// </summary>
+        /// <param name="id">The snake's id.</param>
+        private void OnBlockIsPicked(int id)
+        {
+            var dir = BlockManager.Instance.GetLastGeneratedBlockPosition(id);
+            _aiSnakes[id].ChangeDirection(dir);
         }
 
         /// <summary>
@@ -284,11 +296,14 @@ namespace Multiplayer
         /// </summary>
         private void OnLoadMap(Scene scene, LoadSceneMode mode)
         {
+            BlockManager.Instance.SetPlayersQuantity(_players.Count);
+
             SceneManager.sceneLoaded -= OnLoadMap;
             
             if (!scene.name.Contains("Multiplayer")) return;
             GameManager.Instance.SendOnPressRetryCallback(Restart);
             GameManager.Instance.SendOnPressMainMenu(OnGoToMainMenu);
+            BlockManager.Instance.SendOnBlockIsPickedCallback(OnBlockIsPicked);
 
             SetUpSnakes();
             
@@ -317,6 +332,8 @@ namespace Multiplayer
                 SnakeController aiController = ai.GetComponentInChildren<SnakeController>();
                 aiController.SetColor(GetAIColor(player.Color));
                 aiController.SetOnSnakeDieCallback(RemovePlayerFromDeath);
+                aiController.ID = player.ID - 1;
+                _aiSnakes.Add(aiController);
                 
                 player.ShowSnake();
                 player.transform.position = Vector3.zero;

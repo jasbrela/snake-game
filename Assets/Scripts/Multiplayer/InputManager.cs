@@ -100,7 +100,7 @@ namespace Multiplayer
 
             operation.OnComplete(op =>
             {
-                Debug.Log("Finished");
+                //Debug.Log("Finished");
 
                 action.Enable();
                 

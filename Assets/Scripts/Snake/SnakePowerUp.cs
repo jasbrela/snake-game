@@ -73,11 +73,8 @@ namespace Snake
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (!other.CompareTag("Block") || GameManager.Instance.IsGameOver()) return;
-            
-            BlockController blockController = other.GetComponent<BlockController>();
-
-            AddPowerUp(blockController.Type);
-            blockController.Respawn();
+            Block block = other.GetComponent<Block>();
+            AddPowerUp(block.Type);
         }
     }
 }

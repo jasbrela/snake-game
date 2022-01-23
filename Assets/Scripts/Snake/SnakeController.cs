@@ -40,6 +40,7 @@ namespace Snake
 
         // AI
         private Vector3 _direction;
+        public int ID { get ; set; }
         
         // BOTH
         private SpriteRenderer _headSprite;
@@ -93,7 +94,7 @@ namespace Snake
                 color = manager.Color;
             }
             
-            if (!isAI) return;
+            if (!isAI || GameManager.IsAMultiplayerGame()) return;
             BlockManager.Instance.SendOnGeneratedRandomPositionCallback(ChangeDirection);
             ChangeDirection(BlockManager.Instance.GetLastGeneratedBlockPosition());
             
@@ -115,7 +116,7 @@ namespace Snake
         /// <summary>
         /// Prepares the snake to spawn again.
         /// </summary>
-        public void ResetSnake()
+        private void ResetSnake()
         {
             died = false;
             if (!_headSprite.enabled)
@@ -128,14 +129,16 @@ namespace Snake
             snakeWeight.OnResetSnake();
             
             SetSnakeForSpawn();
-            
+
             if (GameManager.IsAMultiplayerGame() && !isAI)
             {
                 snakePowerUp.AddInitialPowerUps(manager.currentPreset);
             }
 
-            ChangeDirection(BlockManager.Instance.GetLastGeneratedBlockPosition());
-            
+            ChangeDirection(GameManager.IsAMultiplayerGame()
+                ? BlockManager.Instance.GetLastGeneratedBlockPosition(ID)
+                : BlockManager.Instance.GetLastGeneratedBlockPosition());
+
             if (!isAI) _input.actions.Enable();
         }
 
@@ -348,8 +351,8 @@ namespace Snake
         {
             if (!other.CompareTag("Block") || GameManager.Instance.IsGameOver()) return;
             
-            BlockController blockController = other.GetComponent<BlockController>();
-            if (blockController.Type == PowerUp.EnginePower) snakeWeight.OnPickupEnginePowerBlock();
+            Block block = other.GetComponent<Block>();
+            if (block.Type == PowerUp.EnginePower) snakeWeight.OnPickupEnginePowerBlock();
             IncreaseSize();
         }
 
@@ -487,7 +490,7 @@ namespace Snake
         /// Changes the target direction for the AI snake.
         /// </summary>
         /// <param name="target">Target direction</param>
-        private void ChangeDirection(Vector3 target)
+        public void ChangeDirection(Vector3 target)
         {
             _direction = target;
         }
