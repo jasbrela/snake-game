@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Blocks;
 using Enums;
+using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
 
 namespace Snake
@@ -20,38 +22,25 @@ namespace Snake
         [SerializeField] private SnakePowerUp snakePowerUp;
         [SerializeField] private int initialSnakeSize;
 
-        [Space(10)][Header("AI Information - AIHandler can be null if it's not AI")]
+        [Header("AI Information - AIHandler can be null if it's not AI")]
         [Tooltip("Mark if it's not AI")]
         [SerializeField] protected bool isAI;
         [SerializeField] private AIHandler aiHandler;
-        
-        [Space(10)][Header("Player Input - Check to use two keys, Uncheck to use four keys")]
-        [SerializeField] private bool isTwoKeysMovement;
 
-        [Space(10)] [Header("Essentials")]
+        [Header("Essentials")]
         [SerializeField] private BoxCollider2D pointFront;
         [Tooltip("This layer allow the snake to use its battering ram blocks before dying")]
         [SerializeField] private LayerMask obstaclesLayer;
         [Tooltip("This layer will kill the snake instantly")]
         [SerializeField] private LayerMask wallsLayer;
-        
-        // PLAYER
-        private Controls _controls;
-        private Controls Controls
-        {
-            get
-            {
-                if (_controls != null)
-                {
-                    return _controls;
-                }
 
-                return _controls = new Controls();
-            }
-        }
+        // PLAYER
+        private PlayerInput _input;
+        [CanBeNull] private SnakeManager manager; // Null if it's AI.
 
         // AI
         private Vector3 _direction;
+        public int ID { get ; set; }
         
         // BOTH
         private SpriteRenderer _headSprite;
@@ -60,31 +49,65 @@ namespace Snake
         private bool _canTurn = true;
         private bool _canTurnDrastically;
         private bool _collided;
-        #endregion
+        private bool died; // stop movement
         
-        private void Awake()
+        public delegate void OnPlayerSnakeDie([CanBeNull] SnakeManager manager);
+        private OnPlayerSnakeDie onSnakeDieCallback;
+        #endregion
+
+        /// <summary>
+        /// Used to send the callback to be called when the snake dies.
+        /// </summary>
+        /// <param name="onPlayerSnakeDie">A void method to be called.</param>
+        public void SetOnSnakeDieCallback(OnPlayerSnakeDie onPlayerSnakeDie)
         {
-            GameManager.Instance.SendOnPressRetryCallback(ResetSnake);
-            _headSprite = GetComponent<SpriteRenderer>();
-            _headSprite.color = color;
+            onSnakeDieCallback = onPlayerSnakeDie;
         }
 
-        private void Start()
+        /// <summary>
+        /// Sets the snake's color
+        /// </summary>
+        /// <param name="color">A color to be the snake's color.</param>
+        public void SetColor(Color color)
         {
+            this.color = color;
+            _headSprite.color = color;
+        }
+        
+        private void OnEnable()
+        {
+            if (!isAI) _input = GetComponent<PlayerInput>();
+            GameManager.Instance.SendOnPressRetryCallback(ResetSnake);
+            
+            _headSprite = GetComponent<SpriteRenderer>();
+            
             GameManager.Instance.SendOnGameStartsForTheFirstTimeCallback(StartGame);
             
-            if (!isAI) 
+            if (!isAI)
             {
                 SetUpControls();
             }
 
-            if (!isAI) return;
+            if (GameManager.IsAMultiplayerGame() && !isAI)
+            {
+                manager = transform.parent.GetComponent<SnakeManager>();
+                color = manager.Color;
+            }
             
+            if (!isAI || GameManager.IsAMultiplayerGame()) return;
             BlockManager.Instance.SendOnGeneratedRandomPositionCallback(ChangeDirection);
             ChangeDirection(BlockManager.Instance.GetLastGeneratedBlockPosition());
-
+            
         }
 
+        private void Start()
+        {
+            _headSprite.color = color;
+        }
+
+        /// <summary>
+        /// On game starts, start the Move Coroutine
+        /// </summary>
         private void StartGame()
         {
             StartCoroutine(Move());
@@ -95,16 +118,28 @@ namespace Snake
         /// </summary>
         private void ResetSnake()
         {
+            died = false;
+            if (!_headSprite.enabled)
+            {
+                _headSprite.enabled = true;
+            }
             _canTurnDrastically = true;
             snakePowerUp.ResetPowerUps();
             ResetBodyParts();
             snakeWeight.OnResetSnake();
             
             SetSnakeForSpawn();
-            
-            ChangeDirection(BlockManager.Instance.GetLastGeneratedBlockPosition());
-            
-            if (!isAI) Controls.Enable();
+
+            if (GameManager.IsAMultiplayerGame() && !isAI)
+            {
+                snakePowerUp.AddInitialPowerUps(manager.currentPreset);
+            }
+
+            ChangeDirection(GameManager.IsAMultiplayerGame()
+                ? BlockManager.Instance.GetLastGeneratedBlockPosition(ID)
+                : BlockManager.Instance.GetLastGeneratedBlockPosition());
+
+            if (!isAI) _input.actions.Enable();
         }
 
         /// <summary>
@@ -113,11 +148,19 @@ namespace Snake
         private void SetSnakeForSpawn()
         {
             Vector3 spawnPoint = GameManager.Instance.GetNextSpawnPointPosition();
+            
+            if (GameManager.IsAMultiplayerGame())
+            {
+                _canTurn = true;
+                Turn(spawnPoint.x > 0 ? Directions.Left : Directions.Right);
+            }
+            else
+            {
+                Directions first = spawnPoint.x > 0 ? Directions.Left : Directions.Right;
+                Directions second = spawnPoint.y > 0 ? Directions.Down : Directions.Up;
 
-            Directions first = spawnPoint.x > 0 ? Directions.Left : Directions.Right;
-            Directions second = spawnPoint.y > 0 ? Directions.Down : Directions.Up;
-
-            SetRandomRotation(first, second);
+                SetRandomRotation(first, second);
+            }
 
             transform.position = spawnPoint;
             _headSprite.enabled = true;
@@ -140,10 +183,14 @@ namespace Snake
         /// </summary>
         private void ResetBodyParts()
         {
-            foreach (var part in _bodyParts.Where(part => part != transform))
+            if (_bodyParts.Count > 1)
             {
-                Destroy(part.gameObject);
+                foreach (var part in _bodyParts.Where(part => part != transform))
+                {
+                    Destroy(part.gameObject);
+                }
             }
+
             _bodyParts.Clear();
             _bodyParts.Add(transform);
             _headSprite.enabled = false;
@@ -165,18 +212,8 @@ namespace Snake
         /// </summary>
         private void SetUpControls()
         {
-            if (isTwoKeysMovement)
-            {
-                Controls.Player.TurnLeft.performed += _ => Turn(GetLeftDirection());
-                Controls.Player.TurnRight.performed += _ => Turn(GetRightDirection());
-            }
-            else
-            {
-                Controls.Player.TurnLeft.performed += _ => Turn(Directions.Left);
-                Controls.Player.TurnRight.performed += _ => Turn(Directions.Right);
-                Controls.Player.TurnUp.performed += _ => Turn(Directions.Up);
-                Controls.Player.TurnDown.performed += _ => Turn(Directions.Down);
-            }
+            _input.actions[InputActions.TurnLeft.ToString()].performed += _ => Turn(GetLeftDirection());
+            _input.actions[InputActions.TurnRight.ToString()].performed += _ => Turn(GetRightDirection());
         }
 
         /// <summary>
@@ -186,11 +223,14 @@ namespace Snake
         {
             while (true)
             {
-                // BUG: AI is dying as soon as it touches wall without any chance to turn.
-                
+                // BUG: AI is dying as soon as it touches wall directly without any chance to turn.
+
                 if (isAI) TurnAI();
                 if (HasCollided()) yield return null;
-                while (GameManager.Instance.IsGameOver()) yield return null;
+                while (died || GameManager.Instance.IsGameOver())
+                {
+                    yield return null;
+                }
                 MoveSnakeBody();
                 
                 yield return new WaitForSeconds(snakeWeight.Speed);
@@ -252,8 +292,6 @@ namespace Snake
             if (_canTurnDrastically) _canTurnDrastically = false;
         
             transform.rotation = Quaternion.Euler(0, 0, z);
-            
-            HasCollided();
         }
         
         /// <summary>
@@ -278,6 +316,16 @@ namespace Snake
                 }
             }
 
+            if (GameManager.IsAMultiplayerGame())
+            {
+                ResetBodyParts();
+                transform.position = GameManager.Instance.GetDeadPosition();
+                _headSprite.enabled = false;
+                onSnakeDieCallback?.Invoke(manager);
+                died = true;
+                return true;
+            }
+
             if (isAI)
             {
                 ResetSnake();
@@ -293,19 +341,18 @@ namespace Snake
         /// </summary>
         private void GameOver()
         {
-            // TODO: In case of local multiplayer, this must be changed.
             if (isAI) return;
             
             GameManager.Instance.EndGame();
-            Controls.Disable();
+            _input.actions.Disable();
         }
         
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (!other.CompareTag("Block") || GameManager.Instance.IsGameOver()) return;
             
-            BlockController blockController = other.GetComponent<BlockController>();
-            if (blockController.Type == PowerUp.EnginePower) snakeWeight.OnPickupEnginePowerBlock();
+            Block block = other.GetComponent<Block>();
+            if (block.Type == PowerUp.EnginePower) snakeWeight.OnPickupEnginePowerBlock();
             IncreaseSize();
         }
 
@@ -443,7 +490,7 @@ namespace Snake
         /// Changes the target direction for the AI snake.
         /// </summary>
         /// <param name="target">Target direction</param>
-        private void ChangeDirection(Vector3 target)
+        public void ChangeDirection(Vector3 target)
         {
             _direction = target;
         }

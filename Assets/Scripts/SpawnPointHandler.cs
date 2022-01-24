@@ -8,18 +8,21 @@ public class SpawnPointHandler : MonoBehaviour
     [Tooltip("Check for ordered spawn, uncheck for random spawn.")]
     [SerializeField] private bool doesTheOrderMatters;
     
-    [Space(10)][Header("Spawn Points Lists")]
+    [Header("Spawn Points Lists")]
     [SerializeField] private Transform[] leftSpawnPoints;
     [SerializeField] private Transform[] rightSpawnPoints;
+
+    [Header("Dead point")]
+    [SerializeField] private Transform deadPoint;
 
     private int _lastPickedRightSpawnPointIndex;
     private int _lastPickedLeftSpawnPointIndex;
 
-    private bool _lastSpawnedLeft;
+    private bool _lastSpawnedLeft = true;
     
     private void Awake()
     {
-        GameManager.Instance.SendGetSpawnPointsCallback(GetNextSpawnPoint);
+        GameManager.Instance.SendPointsCallback(GetNextSpawnPosition, GetDeadPosition);
         
         // So it will start on point ZERO
         _lastPickedLeftSpawnPointIndex = leftSpawnPoints.Length;
@@ -38,7 +41,8 @@ public class SpawnPointHandler : MonoBehaviour
         CheckList(ref leftSpawnPoints);
         CheckList(ref rightSpawnPoints);
 
-        void CheckList (ref Transform[] list)
+        
+        void CheckList(ref Transform[] list)
         {
             BoxCollider2D bounds = BlockManager.Instance.GetBoundsCollider();
             
@@ -57,10 +61,19 @@ public class SpawnPointHandler : MonoBehaviour
     }
     
     /// <summary>
+    /// The dead position is where the dead snakes go while the game is still running
+    /// </summary>
+    /// <returns>Returns the dead position.</returns>
+    private Vector3 GetDeadPosition()
+    {
+        return deadPoint.position;
+    }
+    
+    /// <summary>
     /// Handles the spawn points cycle.
     /// </summary>
     /// <returns>Returns the next spawn point.</returns>
-    private Vector3 GetNextSpawnPoint()
+    private Vector3 GetNextSpawnPosition()
     {
         if (doesTheOrderMatters)
         {

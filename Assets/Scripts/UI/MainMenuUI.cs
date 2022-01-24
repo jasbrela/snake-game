@@ -1,3 +1,4 @@
+using System;
 using Enums;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -6,6 +7,15 @@ namespace UI
 {
     public class MainMenuUI : MonoBehaviour
     {
+        [SerializeField] private GameObject quitButton;
+        private void Awake()
+        {
+            if (Application.platform == RuntimePlatform.WebGLPlayer)
+            {
+                quitButton.SetActive(false);
+            }
+        }
+
         /// <summary>
         /// Loads the Singleplayer scene.
         /// </summary>
@@ -19,7 +29,15 @@ namespace UI
         /// </summary>
         public void OnPressMultiplayer()
         {
-            SceneManager.LoadScene(Scenes.MultiplayerGame.ToString());
+            SceneManager.LoadScene(Scenes.Preparation.ToString());
+        }
+        
+        /// <summary>
+        /// Closes the game
+        /// </summary>
+        public void OnPressQuit()
+        {
+            Application.Quit();
         }
     }
 }
