@@ -13,6 +13,7 @@ Each block you pick will slow down your snake a little bit. The power-ups are ac
 ### Controls
 - Press **A** to turn left
 - Press **D** to turn right.
+> In multiplayer, each player will choose their own bindings to turn left and right, respectively
 
 ## Code Architecture Diagram
 ![Code Architecture Diagram](docs/code_diagram.png)
